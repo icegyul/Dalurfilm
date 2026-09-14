@@ -1,0 +1,40 @@
+{
+  "id": "dalur_red_100",
+  "version": 1,
+  "name": "Red 100",
+  "description": "Redscale experiment: warm red-orange in every highlight. Bold and unique.",
+  "creatorType": "dalur",
+  "category": "Special",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_red_100.cube",
+    "hash": "306b88701b7906da593ffd6b4d7065386d7a6a3e564e2d791e483b9793c191f7",
+    "kind": "creative"
+  },
+  "intensity": 0.95,
+  "tone": {
+    "exposure": 0.0,
+    "contrast": 0.08,
+    "highlights": 0.02,
+    "shadows": -0.02,
+    "fade": 0.06
+  },
+  "color": {
+    "temperature": 0.1,
+    "tint": 0.08,
+    "saturation": 0.1
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.04,
+    "vignette": 0.09,
+    "chromaticAberration": 0.012
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}

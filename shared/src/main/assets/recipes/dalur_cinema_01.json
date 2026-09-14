@@ -4,6 +4,7 @@
   "name": "Cinema",
   "description": "Controlled cinematic teal-warm.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

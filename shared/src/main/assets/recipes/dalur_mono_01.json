@@ -4,6 +4,7 @@
   "name": "Mono",
   "description": "Quiet black and white.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

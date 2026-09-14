@@ -4,6 +4,7 @@
   "name": "Soft",
   "description": "Airy low-contrast softness.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

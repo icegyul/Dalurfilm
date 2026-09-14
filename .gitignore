@@ -15,6 +15,9 @@ local.properties
 # Third-party source checkouts are fetched via scripts_fetch_github_sources.ps1
 # and are intentionally NOT committed (refs pinned in THIRD_PARTY_LOCK.json).
 third_party/source/
+# Free-license LUT source files (ingested + renamed into shared/src/main/assets;
+# kept out of the repo so trademarked stock names never ship).
+_incoming_luts/
 # Python
 __pycache__/
 .pytest_cache/

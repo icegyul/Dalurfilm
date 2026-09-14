@@ -1,6 +1,17 @@
 {
   "generated": "2026-09-13",
   "project": "DALUR film",
+  "maven": [
+    {
+      "group": "org.shredzone.commons",
+      "artifact": "commons-suncalc",
+      "version": "3.11",
+      "license": "Apache-2.0",
+      "repo": "https://repo1.maven.org/maven2/org/shredzone/commons/commons-suncalc/3.11/",
+      "upstream": "https://github.com/shred/commons-suncalc",
+      "usage": "sun-moon-position-calculator"
+    }
+  ],
   "sources": [
     {
       "name": "android-camera-samples",

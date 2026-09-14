@@ -1,0 +1,40 @@
+{
+  "id": "dalur_street_200",
+  "version": 1,
+  "name": "Street 200",
+  "description": "Even everyday film with a lively palette; a dependable all-rounder.",
+  "creatorType": "dalur",
+  "category": "Vivid",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_street_200.cube",
+    "hash": "bdccc5920ca75fa5f49212ad4b4924df094b8fc3cfc37b54a2da30e93ede59af",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.0,
+    "contrast": 0.1,
+    "highlights": -0.04,
+    "shadows": -0.02,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.02,
+    "tint": -0.01,
+    "saturation": 0.1
+  },
+  "effects": {
+    "grain": 0.09,
+    "grainSize": 0.5,
+    "halation": 0.03,
+    "bloom": 0.03,
+    "vignette": 0.06,
+    "chromaticAberration": 0.012
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}

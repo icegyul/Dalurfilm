@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.dalur.film.camera.CameraViewModel
+import com.dalur.film.shared.CaptureMetadata
 import com.dalur.film.shared.orderCapturesChronologically
 import com.dalur.film.ui.components.DalurHeader
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ fun MapScreen(vm: CameraViewModel) {
     val scope = rememberCoroutineScope()
     var mapError by remember { mutableStateOf<String?>(null) }
     var selectedId by remember { mutableStateOf<String?>(null) }
+    var controller by remember { mutableStateOf<MapOverlayController?>(null) }
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -32,6 +34,11 @@ fun MapScreen(vm: CameraViewModel) {
 
     val gpsCaptures = remember(captures) {
         orderCapturesChronologically(captures).filter { it.gps != null }
+    }
+
+    // Refresh whenever new located captures arrive (fixes stale-map on new capture).
+    LaunchedEffect(gpsCaptures, controller) {
+        controller?.render(gpsCaptures) { msg -> mapError = msg }
     }
 
     Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp)) {
@@ -52,45 +59,16 @@ fun MapScreen(vm: CameraViewModel) {
                                 onCreate(null)
                                 getMapAsync { map ->
                                     try {
+                                        map.addOnMapClickListener { _ -> selectedId = null; true }
+                                        map.setOnMarkerClickListener { m ->
+                                            selectedId = m.title; true
+                                        }
                                         // Configurable style; demo endpoint default, attribution per provider.
                                         map.setStyle("https://demotiles.maplibre.org/style.json") {
                                             try {
-                                                if (gpsCaptures.size >= 2) {
-                                                    val pts = gpsCaptures.map { cap ->
-                                                        val g = requireNotNull(cap.gps)
-                                                        org.maplibre.android.geometry.LatLng(
-                                                            g.latitude, g.longitude)
-                                                    }
-                                                    map.addPolyline(
-                                                        org.maplibre.android.annotations.PolylineOptions()
-                                                            .addAll(pts).width(4f))
-                                                    val bounds = org.maplibre.android.geometry.LatLngBounds.Builder()
-                                                        .includes(pts).build()
-                                                    map.easeCamera(
-                                                        org.maplibre.android.camera.CameraUpdateFactory
-                                                            .newLatLngBounds(bounds, 80), 800)
-                                                } else if (gpsCaptures.size == 1) {
-                                                    val g = gpsCaptures.first().gps!!
-                                                    map.easeCamera(
-                                                        org.maplibre.android.camera.CameraUpdateFactory
-                                                            .newLatLngZoom(
-                                                                org.maplibre.android.geometry.LatLng(
-                                                                    g.latitude, g.longitude), 13.0), 800)
-                                                }
-                                                gpsCaptures.forEach { cap ->
-                                                    val g = requireNotNull(cap.gps)
-                                                    map.addMarker(
-                                                        org.maplibre.android.annotations.MarkerOptions()
-                                                            .position(
-                                                                org.maplibre.android.geometry.LatLng(
-                                                                    g.latitude, g.longitude))
-                                                            .title(cap.mediaId)
-                                                            .snippet(cap.filmRecipeId ?: cap.mediaType))
-                                                }
-                                                map.addOnMapClickListener { _ -> selectedId = null; true }
-                                                map.setOnMarkerClickListener { m ->
-                                                    selectedId = m.title; true
-                                                }
+                                                // Store the controller only once the style is live so
+                                                // later renders (new captures) affect a ready map.
+                                                controller = MapOverlayController(map)
                                             } catch (e: Exception) {
                                                 mapError = "Map overlay failed: ${e.message}"
                                             }
@@ -136,6 +114,56 @@ fun MapScreen(vm: CameraViewModel) {
                     }
                 }
             }
+        }
+    }
+}
+
+/**
+ * Owns the MapLibre annotations for the capture route. Re-rendering clears the
+ * previous markers/polyline first, so [render] is idempotent and safe to call
+ * whenever the capture list grows.
+ */
+private class MapOverlayController(private val map: org.maplibre.android.maps.MapLibreMap) {
+    private val markers = mutableListOf<org.maplibre.android.annotations.Marker>()
+    private val polylines = mutableListOf<org.maplibre.android.annotations.Polyline>()
+
+    fun render(captures: List<CaptureMetadata>, onError: (String) -> Unit) {
+        try {
+            markers.forEach { runCatching { map.removeMarker(it) } }
+            polylines.forEach { runCatching { map.removePolyline(it) } }
+            markers.clear()
+            polylines.clear()
+            if (captures.size >= 2) {
+                val pts = captures.map { cap ->
+                    val g = requireNotNull(cap.gps)
+                    org.maplibre.android.geometry.LatLng(g.latitude, g.longitude)
+                }
+                polylines += map.addPolyline(
+                    org.maplibre.android.annotations.PolylineOptions()
+                        .addAll(pts).width(4f))
+                val bounds = org.maplibre.android.geometry.LatLngBounds.Builder()
+                    .includes(pts).build()
+                map.easeCamera(
+                    org.maplibre.android.camera.CameraUpdateFactory
+                        .newLatLngBounds(bounds, 80), 800)
+            } else if (captures.size == 1) {
+                val g = captures.first().gps!!
+                map.easeCamera(
+                    org.maplibre.android.camera.CameraUpdateFactory
+                        .newLatLngZoom(
+                            org.maplibre.android.geometry.LatLng(
+                                g.latitude, g.longitude), 13.0), 800)
+            }
+            captures.forEach { cap ->
+                val g = requireNotNull(cap.gps)
+                markers += map.addMarker(
+                    org.maplibre.android.annotations.MarkerOptions()
+                        .position(org.maplibre.android.geometry.LatLng(g.latitude, g.longitude))
+                        .title(cap.mediaId)
+                        .snippet(cap.filmRecipeId ?: cap.mediaType))
+            }
+        } catch (e: Exception) {
+            onError("Map overlay failed: ${e.message}")
         }
     }
 }

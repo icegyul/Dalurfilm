@@ -1,0 +1,40 @@
+{
+  "id": "dalur_skin_160",
+  "version": 1,
+  "name": "Skin 160",
+  "description": "Skin-toned negative with a natural balance, made for people photography.",
+  "creatorType": "dalur",
+  "category": "People",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_skin_160.cube",
+    "hash": "6d2878ff2ea746591c6b88e7138ba033a548dde011cb98b8619ed71c4ea1dff0",
+    "kind": "creative"
+  },
+  "intensity": 0.88,
+  "tone": {
+    "exposure": 0.0,
+    "contrast": 0.06,
+    "highlights": -0.04,
+    "shadows": -0.01,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.02,
+    "tint": 0.01,
+    "saturation": 0.06
+  },
+  "effects": {
+    "grain": 0.07,
+    "grainSize": 0.5,
+    "halation": 0.04,
+    "bloom": 0.04,
+    "vignette": 0.04,
+    "chromaticAberration": 0.008
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}

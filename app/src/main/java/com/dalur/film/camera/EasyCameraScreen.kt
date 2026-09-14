@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -38,10 +39,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.dalur.film.film.FilmEngine
+import com.dalur.film.film.filmCategoryTabs
+import com.dalur.film.film.filmsForCategory
 import com.dalur.film.shared.CaptureMetadata
 import com.dalur.film.shared.GpsPoint
 import com.dalur.film.shared.dalurFileName
 import com.dalur.film.ui.components.FailureState
+import com.dalur.film.ui.components.FilmCarouselCard
+import com.dalur.film.ui.components.FilmCategoryRow
 import com.dalur.film.ui.components.filmTint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -49,6 +54,7 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.UUID
 import java.util.concurrent.Executor
+import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,8 +68,10 @@ fun EasyCameraScreen(
     val lifecycle = LocalLifecycleOwner.current
     val scope = rememberCoroutineScope()
     val easy by vm.easy.collectAsState()
+    val pro by vm.pro.collectAsState()
     val recipes by vm.filmRecipes.collectAsState()
     val caps by vm.capabilityReport.collectAsState()
+    val scheme = MaterialTheme.colorScheme
 
     var hasCamera by remember { mutableStateOf(false) }
     var hasMic by remember { mutableStateOf(false) }
@@ -160,9 +168,23 @@ fun EasyCameraScreen(
                         scope.launch(Dispatchers.IO) {
                             try {
                                 // REAL film rendering: GPUImage Plus rule-string filter on the bitmap.
-                                if (recipe != null) {
-                                    runCatching {
-                                        applyFilmToJpeg(outFile, FilmEngine.ruleString(recipe, easy.filmIntensity))
+                                // Honest pipeline: only supported CGE tokens are run; everything else is
+                                // reported NOT_SUPPORTED on the capture metadata. No silent fallback.
+                                val plan = recipe?.let { FilmEngine.plan(it, easy.filmIntensity) }
+                                var filmApplied: Boolean? = null
+                                var filmError: String? = null
+                                if (recipe != null && plan != null) {
+                                    if (plan.rule.isBlank()) {
+                                        // Nothing supported to execute (recipe leans on NOT_SUPPORTED
+                                        // components) — recorded truthfully, no fake PASS.
+                                        filmApplied = false
+                                    } else {
+                                        val err = applyFilmToJpeg(outFile, plan.rule)
+                                        if (err == null) filmApplied = true
+                                        else {
+                                            filmApplied = false
+                                            filmError = err
+                                        }
                                     }
                                 }
                                 val savedUri = saveToGallery(ctx, outFile, true, recipe?.name)
@@ -186,11 +208,17 @@ fun EasyCameraScreen(
                                     lutRecipeId = recipe?.id,
                                     lutRecipeVersion = recipe?.version,
                                     lutHash = recipe?.lut?.hash,
-                                    lutIntensity = easy.filmIntensity
+                                    lutIntensity = easy.filmIntensity,
+                                    filmApplied = filmApplied,
+                                    filmError = filmError,
+                                    filmSupportReport = plan?.report
                                 )
                                 // Resolve app-scoped singletons via context.
                                 val app = ctx.applicationContext as com.dalur.film.DalurApp
                                 app.captures.insert(meta)
+                                if (filmError != null) {
+                                    vm.setError("Film not applied: $filmError — photo saved without film.")
+                                }
                                 withContext(Dispatchers.Main) { vm.setLastCapture(savedUri) }
                             } catch (e: Exception) {
                                 withContext(Dispatchers.Main) { vm.setError("Save failed: ${e.message}") }
@@ -249,6 +277,10 @@ fun EasyCameraScreen(
                                     val savedUri = saveToGallery(ctx, outFile, false, recipe?.name)
                                     val fix = currentFix()
                                     val rep = caps
+                                    // Video film status: CGE filterImage_MultipleEffects is
+                                    // frame-only; no real-time or post-processing video path
+                                    // exists. Report honestly — never claim film was applied.
+                                    val videoPlan = recipe?.let { FilmEngine.plan(it, easy.filmIntensity) }
                                     val meta = CaptureMetadata(
                                         mediaId = mediaId,
                                         timestampMillis = ts,
@@ -268,7 +300,10 @@ fun EasyCameraScreen(
                                         lutRecipeId = recipe?.id,
                                         lutRecipeVersion = recipe?.version,
                                         lutHash = recipe?.lut?.hash,
-                                        lutIntensity = easy.filmIntensity
+                                        lutIntensity = easy.filmIntensity,
+                                        filmApplied = false,
+                                        filmError = if (recipe != null) "NOT_SUPPORTED: CGE filterImage_MultipleEffects is frame-only; no video pipeline" else null,
+                                        filmSupportReport = videoPlan?.report
                                     )
                                     val app = ctx.applicationContext as com.dalur.film.DalurApp
                                     app.captures.insert(meta)
@@ -289,167 +324,198 @@ fun EasyCameraScreen(
         }
     }
 
-    Column(Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)) {
-        // Top bar: PRO toggle + settings + capability
-        Row(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-            verticalAlignment = Alignment.CenterVertically) {
-            val scheme = MaterialTheme.colorScheme
-            Text("DALUR film", style = MaterialTheme.typography.titleMedium,
-                color = scheme.onBackground)
+    // ---- Cinematic layout: edge-to-edge viewfinder, minimal overlay controls ----
+    Box(Modifier.fillMaxSize().background(scheme.background)) {
+        // Viewfinder layer (full-screen).
+        if (hasCamera) {
+            AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
+            // Live film tint overlay (preview approximation; photo output uses the real GPU filter).
+            val recipe = recipes.firstOrNull { it.id == easy.filmId }
+            if (recipe != null && easy.filmIntensity > 0.01f) {
+                FilmPreviewOverlay(recipeId = recipe.id, alpha = 0.10f * easy.filmIntensity)
+            }
+            // Frame guides (pro)
             if (easy.isPro) {
-                Spacer(Modifier.width(8.dp))
-                AssistChip(onClick = onOpenSettings, label = { Text("PRO") })
+                FrameGuides()
             }
-            Spacer(Modifier.weight(1f))
-            IconButton(onClick = onOpenCapability) {
-                Icon(Icons.Filled.Info, "capability", tint = scheme.onBackground)
-            }
-            IconButton(onClick = onOpenSettings) {
-                Icon(Icons.Filled.Settings, "settings", tint = scheme.onBackground)
-            }
+        } else {
+            FailureState(
+                title = "Camera permission needed",
+                body = "Allow camera access to shoot. Location and microphone stay optional until you need them.",
+                action = "Grant camera"
+            ) { permLauncher.launch(arrayOf(Manifest.permission.CAMERA)) }
         }
-        if (easy.isPro) {
-            ProCameraPanel(vm)
-        }
-        // Viewfinder
-        val scheme = MaterialTheme.colorScheme
-        Box(Modifier.weight(1f).fillMaxWidth()
-            .padding(horizontal = 12.dp)
-            .clip(RoundedCornerShape(20.dp))
-            .border(1.dp, scheme.outline, RoundedCornerShape(20.dp))) {
-            if (hasCamera) {
-                AndroidView(factory = { previewView }, modifier = Modifier.fillMaxSize())
-                // Live film tint overlay (preview approximation; photo output uses the real GPU filter).
-                val recipe = recipes.firstOrNull { it.id == easy.filmId }
-                if (recipe != null && easy.filmIntensity > 0.01f) {
-                    FilmPreviewOverlay(recipeId = recipe.id, alpha = 0.10f * easy.filmIntensity)
-                }
-                // Frame guides (pro)
+
+        // Top HUD panel: opaque dark so the chrome stays readable with no frame bleed-through.
+        Column(
+            Modifier.align(Alignment.TopCenter).fillMaxWidth()
+                .background(Color(0xFF0B0B0D))
+                .padding(horizontal = 16.dp, vertical = 10.dp)
+        ) {
+            // Top bar: PRO chip + settings + capability
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text("DALUR film", style = MaterialTheme.typography.titleMedium,
+                    color = scheme.onBackground)
                 if (easy.isPro) {
-                    FrameGuides()
+                    Spacer(Modifier.width(8.dp))
+                    AssistChip(onClick = onOpenSettings, label = { Text("PRO") })
                 }
+                Spacer(Modifier.weight(1f))
+                IconButton(onClick = onOpenCapability) {
+                    Icon(Icons.Filled.Info, "capability", tint = scheme.onBackground)
+                }
+                IconButton(onClick = onOpenSettings) {
+                    Icon(Icons.Filled.Settings, "settings", tint = scheme.onBackground)
+                }
+            }
+            // Stage HUD — stepwise exposure: only the stage-relevant readout appears.
+            Row(Modifier.fillMaxWidth().padding(top = 2.dp),
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
+                verticalAlignment = Alignment.CenterVertically) {
                 if (easy.isRecording) {
-                    Row(Modifier.align(Alignment.TopCenter).padding(8.dp)) {
-                        AssistChip(onClick = {}, label = {
-                            Text("REC %02d:%02d".format(easy.recordSeconds / 60, easy.recordSeconds % 60),
-                                color = scheme.onBackground)
-                        }, leadingIcon = {
-                            Box(Modifier.size(10.dp).background(scheme.error, CircleShape))
-                        })
+                    StageHud(text = "● REC %02d:%02d".format(
+                        easy.recordSeconds / 60, easy.recordSeconds % 60), accent = scheme.error)
+                }
+                if (easy.isPro) {
+                    StageHud(text = "FPS ${pro.fps}")
+                    StageHud(text = "ISO ${pro.iso ?: "AUTO"}")
+                    StageHud(text = shutterLabel(pro.shutterSec))
+                }
+            }
+        }
+
+        easy.error?.let {
+            Card(Modifier.align(Alignment.Center).padding(16.dp)) {
+                Text(it, Modifier.padding(12.dp))
+            }
+        }
+
+        // Bottom control deck: opaque dark panel, no translucent scrim over the frame.
+        Column(
+            Modifier.align(Alignment.BottomCenter).fillMaxWidth()
+                .background(Color(0xFF0B0B0D))
+        ) {
+            if (easy.isPro) {
+                HorizontalDivider(color = scheme.outline)
+                ProCameraPanel(vm)
+            }
+            HorizontalDivider(color = scheme.outline)
+            // Mode toggle
+            Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
+                SingleChoiceSegmentedButtonRow {
+                    SegmentedButton(
+                        selected = easy.mode == CaptureMode.PHOTO,
+                        onClick = { vm.setMode(CaptureMode.PHOTO) },
+                        shape = SegmentedButtonDefaults.itemShape(0, 2),
+                        label = { Text("Photo") }
+                    )
+                    SegmentedButton(
+                        selected = easy.mode == CaptureMode.VIDEO,
+                        onClick = { vm.setMode(CaptureMode.VIDEO) },
+                        shape = SegmentedButtonDefaults.itemShape(1, 2),
+                        label = { Text("Video") }
+                    )
+                }
+            }
+            // Film selection: category tabs + horizontal carousel.
+            val categories = remember(recipes) { filmCategoryTabs(recipes) }
+            var activeCategory by remember { mutableStateOf("All") }
+            val visibleFilms = remember(recipes, activeCategory) {
+                filmsForCategory(recipes, activeCategory)
+            }
+            Column(Modifier.fillMaxWidth().padding(top = 4.dp)) {
+                FilmCategoryRow(
+                    categories = categories,
+                    selected = activeCategory,
+                    onSelect = { activeCategory = it }
+                )
+                LazyRow(
+                    Modifier.fillMaxWidth().padding(top = 6.dp, bottom = 2.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+                    item {
+                        FilmCarouselCard(
+                            name = "None",
+                            subtitle = "no film",
+                            tint = MaterialTheme.colorScheme.surfaceVariant,
+                            selected = easy.filmId == null
+                        ) { vm.selectFilm(null) }
+                    }
+                    items(visibleFilms, key = { it.id }) { r ->
+                        FilmCarouselCard(
+                            name = r.name,
+                            subtitle = "${(r.intensity * 100).toInt()}% · ${r.category}",
+                            tint = filmTint(r.id),
+                            selected = easy.filmId == r.id
+                        ) { vm.selectFilm(r.id) }
                     }
                 }
-            } else {
-                FailureState(
-                    title = "Camera permission needed",
-                    body = "Allow camera access to shoot. Location and microphone stay optional until you need them.",
-                    action = "Grant camera"
-                ) { permLauncher.launch(arrayOf(Manifest.permission.CAMERA)) }
             }
-            easy.error?.let {
-                Card(Modifier.align(Alignment.BottomCenter).padding(12.dp)) {
-                    Text(it, Modifier.padding(12.dp))
+            // Shutter row
+            val haptics = LocalHapticFeedback.current
+            Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp),
+                verticalAlignment = Alignment.CenterVertically) {
+                // Last-shot thumbnail
+                Box(Modifier.size(52.dp).clip(RoundedCornerShape(14.dp))
+                    .background(scheme.surfaceVariant)
+                    .border(1.dp, scheme.outline, RoundedCornerShape(14.dp))
+                    .clickable(enabled = easy.lastCaptureUri != null) {
+                        easy.lastCaptureUri?.let { onOpenPlayback(android.net.Uri.encode(it)) }
+                    }, contentAlignment = Alignment.Center) {
+                    Icon(Icons.Filled.Photo, "last", tint = scheme.onSurfaceVariant)
                 }
-            }
-        }
-        // Mode toggle
-        Row(Modifier.fillMaxWidth().padding(top = 10.dp), horizontalArrangement = Arrangement.Center) {
-            SingleChoiceSegmentedButtonRow {
-                SegmentedButton(
-                    selected = easy.mode == CaptureMode.PHOTO,
-                    onClick = { vm.setMode(CaptureMode.PHOTO) },
-                    shape = SegmentedButtonDefaults.itemShape(0, 2),
-                    label = { Text("Photo") }
-                )
-                SegmentedButton(
-                    selected = easy.mode == CaptureMode.VIDEO,
-                    onClick = { vm.setMode(CaptureMode.VIDEO) },
-                    shape = SegmentedButtonDefaults.itemShape(1, 2),
-                    label = { Text("Video") }
-                )
-            }
-        }
-        // Film strip: noir text tabs
-        LazyRow(Modifier.fillMaxWidth().padding(vertical = 4.dp),
-            contentPadding = PaddingValues(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-            item {
-                FilmTab(name = "None", selected = easy.filmId == null) { vm.selectFilm(null) }
-            }
-            items(recipes) { r ->
-                FilmTab(name = r.name, selected = easy.filmId == r.id) { vm.selectFilm(r.id) }
-            }
-        }
-        // Shutter row
-        val haptics = LocalHapticFeedback.current
-        Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 14.dp),
-            verticalAlignment = Alignment.CenterVertically) {
-            // Last-shot thumbnail
-            Box(Modifier.size(52.dp).clip(RoundedCornerShape(14.dp))
-                .background(scheme.surfaceVariant)
-                .border(1.dp, scheme.outline, RoundedCornerShape(14.dp))
-                .clickable(enabled = easy.lastCaptureUri != null) {
-                    easy.lastCaptureUri?.let { onOpenPlayback(android.net.Uri.encode(it)) }
-                }, contentAlignment = Alignment.Center) {
-                Icon(Icons.Filled.Photo, "last", tint = scheme.onSurfaceVariant)
-            }
-            Spacer(Modifier.weight(1f))
-            // Shutter / record
-            val shutterInner = when {
-                easy.isRecording -> scheme.error
-                easy.mode == CaptureMode.VIDEO -> scheme.error
-                else -> scheme.onBackground
-            }
-            Box(
-                Modifier.size(80.dp)
-                    .border(3.dp, scheme.onBackground, CircleShape)
-                    .padding(7.dp)
-                    .clip(CircleShape)
-                    .background(shutterInner)
-                    .clickable {
-                        haptics.performHapticFeedback(HapticFeedbackType.LongPress)
-                        if (easy.mode == CaptureMode.PHOTO) takePhoto() else toggleVideo()
-                    },
-                contentAlignment = Alignment.Center
-            ) {
-                if (easy.mode == CaptureMode.VIDEO && !easy.isRecording) {
-                    Box(Modifier.size(26.dp).clip(CircleShape)
-                        .background(scheme.background))
+                Spacer(Modifier.weight(1f))
+                // Shutter / record
+                val shutterInner = when {
+                    easy.isRecording -> scheme.error
+                    easy.mode == CaptureMode.VIDEO -> scheme.error
+                    else -> scheme.onBackground
                 }
-                if (easy.isRecording) {
-                    Icon(Icons.Filled.Stop, "stop",
-                        tint = scheme.onError, modifier = Modifier.size(28.dp))
+                Box(
+                    Modifier.size(80.dp)
+                        .border(3.dp, scheme.onBackground, CircleShape)
+                        .padding(7.dp)
+                        .clip(CircleShape)
+                        .background(shutterInner)
+                        .clickable {
+                            haptics.performHapticFeedback(HapticFeedbackType.LongPress)
+                            if (easy.mode == CaptureMode.PHOTO) takePhoto() else toggleVideo()
+                        },
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (easy.mode == CaptureMode.VIDEO && !easy.isRecording) {
+                        Box(Modifier.size(26.dp).clip(CircleShape)
+                            .background(scheme.background))
+                    }
+                    if (easy.isRecording) {
+                        Icon(Icons.Filled.Stop, "stop",
+                            tint = scheme.onError, modifier = Modifier.size(28.dp))
+                    }
                 }
-            }
-            Spacer(Modifier.weight(1f))
-            IconButton(onClick = { vm.switchLens() }) {
-                Icon(Icons.Filled.Cameraswitch, "switch", tint = scheme.onBackground)
+                Spacer(Modifier.weight(1f))
+                IconButton(onClick = { vm.switchLens() }) {
+                    Icon(Icons.Filled.Cameraswitch, "switch", tint = scheme.onBackground)
+                }
             }
         }
     }
 }
 
+/** Minimal stage-readout chip (REC/FPS/ISO/shutter), stepped by stage relevance. */
 @Composable
-private fun FilmTab(name: String, selected: Boolean, onClick: () -> Unit) {
-    val scheme = MaterialTheme.colorScheme
-    Column(
-        Modifier.clickable(onClick = onClick).padding(horizontal = 12.dp, vertical = 8.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            name,
-            color = if (selected) scheme.primary else scheme.onSurfaceVariant,
-            style = MaterialTheme.typography.titleSmall,
-            fontWeight = if (selected) androidx.compose.ui.text.font.FontWeight.SemiBold
-                else androidx.compose.ui.text.font.FontWeight.Normal
-        )
-        Spacer(Modifier.height(4.dp))
-        Box(
-            Modifier.size(4.dp).background(
-                if (selected) scheme.primary else Color.Transparent,
-                CircleShape
-            )
-        )
+private fun StageHud(text: String, accent: Color = Color(0xFFF5F2EA)) {
+    Box(Modifier.clip(RoundedCornerShape(6.dp))
+        .background(Color(0xFF1E1E24))
+        .padding(horizontal = 8.dp, vertical = 4.dp)) {
+        Text(text, color = accent, style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.SemiBold)
     }
+}
+
+private fun shutterLabel(sec: Double?): String {
+    if (sec == null) return "SHUTTER AUTO"
+    return if (sec >= 1.0) "${sec.roundToInt()}s" else "1/${(1.0 / sec).roundToInt()}"
 }
 
 @Composable
@@ -475,20 +541,25 @@ private fun FrameGuides() {
     }
 }
 
-private fun applyFilmToJpeg(file: File, rule: String) {
-    if (rule.isBlank()) return
-    try {
-        val bmp = android.graphics.BitmapFactory.decodeFile(file.absolutePath) ?: return
+/** Applies a supported CGE rule string to the captured JPEG in place.
+ *  Returns null on success; an error message on failure. NEVER silently returns the
+ *  original bitmap — a failed film pass is reported, not hidden. */
+private fun applyFilmToJpeg(file: File, rule: String): String? {
+    if (rule.isBlank()) return null
+    val bmp = android.graphics.BitmapFactory.decodeFile(file.absolutePath)
+        ?: return "could not decode captured JPEG"
+    return try {
         // CGENativeLibrary rule-string filtering (GPUImage Plus).
-        val out = org.wysaid.nativePort.CGENativeLibrary.filterImage_MultipleEffects(
-            bmp, rule, 1.0f)
+        val out = org.wysaid.nativePort.CGENativeLibrary.filterImage_MultipleEffects(bmp, rule, 1.0f)
         File(file.absolutePath).outputStream().use { os ->
             out.compress(android.graphics.Bitmap.CompressFormat.JPEG, 95, os)
         }
-        if (!bmp.isRecycled) bmp.recycle()
         if (!out.isRecycled) out.recycle()
-    } catch (_: Exception) {
-        // Fallback: keep the original capture; preview overlay already showed intent.
+        null
+    } catch (e: Throwable) {
+        "filter failed: ${e.message}"
+    } finally {
+        if (!bmp.isRecycled) bmp.recycle()
     }
 }
 

@@ -48,7 +48,29 @@ data class CaptureMetadata(
     val lutRecipeId: String? = null,
     val lutRecipeVersion: Int? = null,
     val lutHash: String? = null,
-    val lutIntensity: Float? = null
+    val lutIntensity: Float? = null,
+    /** true when the photo pipeline applied supported film tokens; false when it could not.
+     *  null when no film was requested (e.g. the "None" recipe, or video where the master
+     *  must stay untouched by design). NEVER assumed — reflects what actually ran. */
+    val filmApplied: Boolean? = null,
+    /** Non-null when applying supported film effects failed; the photo is still saved raw. */
+    val filmError: String? = null,
+    /** Which recipe components were actually applied vs. NOT_SUPPORTED by the renderer. */
+    val filmSupportReport: FilmSupportReport? = null,
+    /** Absolute path of the per-media `.dalur.json` sidecar (written by CaptureMetadataStore). */
+    val sidecarUri: String? = null
+)
+
+/**
+ * Honest report of what a film recipe's components SNAPSHOT the device renderer can do.
+ * The photo pipeline applies only [applied]; every component in [notSupported] was
+ * intentionally NOT injected. Presence here is the source of truth for "film was applied"
+ * — it never claims PASS for a component the renderer cannot execute.
+ */
+@Serializable
+data class FilmSupportReport(
+    val applied: List<String> = emptyList(),
+    val notSupported: List<String> = emptyList()
 )
 
 @Serializable

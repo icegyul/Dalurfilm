@@ -4,6 +4,7 @@
   "name": "Rain",
   "description": "Cool quiet overcast.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

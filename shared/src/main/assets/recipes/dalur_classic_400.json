@@ -1,0 +1,40 @@
+{
+  "id": "dalur_classic_400",
+  "version": 1,
+  "name": "Classic 400",
+  "description": "The same true color at double speed; a touch more grain and contrast.",
+  "creatorType": "dalur",
+  "category": "Classic",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_classic_400.cube",
+    "hash": "4d12fa3724ea305dc848654fbbb7ae3c9bd5343994b33fd5676faa4672cf7eb6",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.0,
+    "contrast": 0.11,
+    "highlights": -0.05,
+    "shadows": -0.03,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.02,
+    "tint": 0.01,
+    "saturation": 0.09
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.55,
+    "halation": 0.04,
+    "bloom": 0.04,
+    "vignette": 0.06,
+    "chromaticAberration": 0.013
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}

@@ -4,6 +4,7 @@
   "name": "Sunset",
   "description": "Golden-hour glow.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

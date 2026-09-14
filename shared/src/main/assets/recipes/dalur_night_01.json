@@ -4,6 +4,7 @@
   "name": "Night",
   "description": "Deep nocturnal calm.",
   "creatorType": "dalur",
+  "category": "Low Light",
   "lut": {
     "format": "cube",
     "size": 17,

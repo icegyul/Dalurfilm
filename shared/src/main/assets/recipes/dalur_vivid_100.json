@@ -1,0 +1,40 @@
+{
+  "id": "dalur_vivid_100",
+  "version": 1,
+  "name": "Vivid 100",
+  "description": "Punchy saturated color negative for bright days and everyday pop.",
+  "creatorType": "dalur",
+  "category": "Vivid",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_vivid_100.cube",
+    "hash": "3af2860310829ad1e5becefa2c0dc81cbb68ded2d77858154a4df71bbfed9f95",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.0,
+    "contrast": 0.12,
+    "highlights": -0.05,
+    "shadows": -0.03,
+    "fade": 0.01
+  },
+  "color": {
+    "temperature": 0.03,
+    "tint": 0.0,
+    "saturation": 0.16
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.03,
+    "bloom": 0.04,
+    "vignette": 0.06,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}

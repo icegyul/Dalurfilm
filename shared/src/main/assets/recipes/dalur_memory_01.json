@@ -4,6 +4,7 @@
   "name": "Memory",
   "description": "Warm, soft everyday memory.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

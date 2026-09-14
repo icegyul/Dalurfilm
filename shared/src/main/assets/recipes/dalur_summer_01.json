@@ -4,6 +4,7 @@
   "name": "Summer",
   "description": "Sunlit warm vibrance.",
   "creatorType": "dalur",
+  "category": "Signature",
   "lut": {
     "format": "cube",
     "size": 17,

@@ -10,6 +10,8 @@ data class FilmRecipe(
     val name: String,
     val description: String = "",
     val creatorType: String = "dalur", // dalur | local
+    /** Browse grouping tab: Signature | Vivid | People | Natural | Classic | Low Light | Special | General. */
+    val category: String = "General",
     val lut: LutRef? = null,
     val intensity: Float = 0.85f,
     val tone: Tone = Tone(),

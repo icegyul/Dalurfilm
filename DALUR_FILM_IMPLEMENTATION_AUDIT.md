@@ -6,6 +6,22 @@ Scope: analysis only. No code written. Statuses: `EXISTING` / `PARTIAL` / `MISSI
 
 ---
 
+## Round 1 implementation (2026-09-14) — status update
+
+Round 1 closed three `BROKEN` items and re-zeroed the CAMERA UI to the Minimal·Dark·
+Cinematic direction. No fake PASS: each entry below records exactly what ran.
+
+| Item (was) | Status now | What changed (evidence) |
+|---|---|---|
+| #1 GPU rule-string film application (`BROKEN`) | `PARTIAL` — honest core | `FilmEngine` now emits **only** CGE-executable tokens (`exposure`/`contrast`/`saturation`/`whitebalance`). `lut`/`grain`/`halation`/`bloom` plus `vignette`/`chromaticAberration`/`lightLeak`/`hsl`/`highlights`/`shadows`/`fade`/`blacks`/`whites` are classified `NOT_SUPPORTED`, never injected, and reported on the capture (`CaptureMetadata.filmSupportReport`). The silent try-catch fallback in `applyFilmToJpeg` is gone: a failed filter pass is recorded (`filmApplied=false`, `filmError`) and surfaced to the user; a recipe with no supported tokens records `filmApplied=false` with the `NOT_SUPPORTED` list. A `.cube` is **not** silver-bullet-fixed: real 3D LUT application still needs a vendored 512×512 PNG lookup stage (spec §4.2 — still `MISSING`). |
+| #5 Per-media sidecars (`BROKEN`) | `EXISTING` | `CaptureMetadataStore.insert` now writes a `.dalur.json` sidecar for **every** capture: adjacent for `file://` media, and `filesDir/captures/<id>.dalur.json` for MediaStore `content://` (scoped storage forbids adjacent files). The sidecar path is recorded as `CaptureMetadata.sidecarUri`; `load()` skips `.dalur.json` so sidecars never double-count as captures. |
+| #4 Map staleness (`BROKEN`) | `EXISTING` | `MapScreen` keeps the `MapLibreMap` after style load in a `MapOverlayController`; a `LaunchedEffect` re-renders markers/polyline/camera whenever `gpsCaptures` changes, so new captures refresh the map instead of freezing the factory's first snapshot. Click/selection handlers unchanged. |
+| CAMERA UI (design direction) | `PARTIAL` — closer, not done | Edge-to-edge (fullscreen) viewfinder with a dark top gradient scrim and a translucent bottom control deck; stage-HUD readouts appear stepwise — `● REC mm:ss` while recording, then `FPS`/`ISO`/`SHUTTER` only when PRO is on. All prior controls/features are preserved (nothing deleted); PRO panel and film strip remain. Live preview is still the flat `filmTint` wash (real-time GPU preview unchanged — out of round-1 scope). |
+
+Deliberately NOT done this round (kept honest): GPS runtime permission + `LocationTracker` start/stop (§4.8 — GPS capture stays `BROKEN`), real LUT application (§4.2), USB-C write path (§4.7), manual-control wiring (§4.4), journey 1080p/route render (§4.10/§4.11), iOS sync of the new `FilmSupportReport`/`sidecarUri`/`filmApplied` fields is only mirrored in `Models.swift` (no build). See §12 for the full plan.
+
+---
+
 ## 1. Project Overview
 
 DALUR film is specified as a premium paid (USD 7.99) camera app: Easy camera + PRO cinema mode +

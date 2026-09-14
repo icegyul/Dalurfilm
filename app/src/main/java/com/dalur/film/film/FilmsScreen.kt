@@ -23,6 +23,7 @@ import com.dalur.film.DalurApp
 import com.dalur.film.camera.CameraViewModel
 import com.dalur.film.shared.FilmRecipe
 import com.dalur.film.ui.components.DalurHeader
+import com.dalur.film.ui.components.FilmCategoryRow
 import com.dalur.film.ui.components.filmTint
 import kotlinx.coroutines.launch
 
@@ -34,6 +35,9 @@ fun FilmsScreen(vm: CameraViewModel) {
     val scope = rememberCoroutineScope()
     var editing by remember { mutableStateOf<FilmRecipe?>(null) }
     var intensity by remember { mutableStateOf(0.85f) }
+    val categories = remember(recipes) { filmCategoryTabs(recipes) }
+    var activeCategory by remember { mutableStateOf("All") }
+    val visible = remember(recipes, activeCategory) { filmsForCategory(recipes, activeCategory) }
 
     Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp)) {
         DalurHeader(
@@ -41,9 +45,15 @@ fun FilmsScreen(vm: CameraViewModel) {
             subtitle = "DALUR-original recipes. Tap to preview live in Camera."
         )
         Spacer(Modifier.height(12.dp))
+        FilmCategoryRow(
+            categories = categories,
+            selected = activeCategory,
+            onSelect = { activeCategory = it }
+        )
+        Spacer(Modifier.height(12.dp))
         LazyVerticalGrid(GridCells.Fixed(2), verticalArrangement = Arrangement.spacedBy(12.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.weight(1f)) {
-            items(recipes) { r ->
+            items(visible) { r ->
                 val selected = editing?.id == r.id
                 ElevatedCard(
                     onClick = {

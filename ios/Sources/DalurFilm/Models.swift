@@ -7,6 +7,8 @@ public struct FilmRecipe: Codable, Sendable {
     public var name: String
     public var description: String
     public var creatorType: String
+    /// Browse grouping tab; absent in older JSON files -> treat as "General".
+    public var category: String? = nil
     public var lut: LutRef?
     public var intensity: Float
     public var tone: Tone
@@ -45,6 +47,15 @@ public struct CaptureMetadata: Codable, Sendable {
     public var codec: String?; public var colorProfile: String?
     public var lutRecipeId: String?; public var lutRecipeVersion: Int?
     public var lutHash: String?; public var lutIntensity: Float?
+    public var filmApplied: Bool?
+    public var filmError: String?
+    public var filmSupportReport: FilmSupportReport?
+    public var sidecarUri: String?
+}
+
+public struct FilmSupportReport: Codable, Sendable {
+    public var applied: [String]
+    public var notSupported: [String]
 }
 
 /// LOG VIEW <-> LUT VIEW monitor state. Master is never baked with the LUT.

@@ -1,0 +1,40 @@
+{
+  "id": "dalur_natural_100",
+  "version": 1,
+  "name": "Natural 100",
+  "description": "True-to-life color with restrained saturation for docu and face work.",
+  "creatorType": "dalur",
+  "category": "Natural",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_natural_100.cube",
+    "hash": "fb343179c263e98417ec460c318bd64f9e782aa5d9fd4d35ee03dfbb9fa80a97",
+    "kind": "creative"
+  },
+  "intensity": 0.85,
+  "tone": {
+    "exposure": 0.0,
+    "contrast": 0.06,
+    "highlights": -0.02,
+    "shadows": -0.01,
+    "fade": 0.03
+  },
+  "color": {
+    "temperature": 0.01,
+    "tint": 0.0,
+    "saturation": 0.04
+  },
+  "effects": {
+    "grain": 0.07,
+    "grainSize": 0.5,
+    "halation": 0.03,
+    "bloom": 0.03,
+    "vignette": 0.04,
+    "chromaticAberration": 0.008
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}
