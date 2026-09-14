@@ -1,0 +1,25 @@
+# DALUR film — build outputs, local SDK, IDE, third-party source checkouts
+.gradle/
+build/
+builds/
+release/*.apk
+release/*.aab
+release/*.ipa
+release/*.xcarchive
+local.properties
+*.iml
+.idea/
+.DS_Store
+*.keystore
+*.jks
+# Third-party source checkouts are fetched via scripts_fetch_github_sources.ps1
+# and are intentionally NOT committed (refs pinned in THIRD_PARTY_LOCK.json).
+third_party/source/
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+# Node (journey web preview tooling, if any)
+node_modules/
+# OS
+Thumbs.db

@@ -1,0 +1,48 @@
+{
+  "generated": "2026-09-13",
+  "project": "DALUR film",
+  "sources": [
+    {
+      "name": "android-camera-samples",
+      "repo": "https://github.com/android/camera-samples",
+      "ref": "2f10e46fc7a09f7208f8d6de72482ecf3e5fb85a",
+      "license": "Apache-2.0 / repository terms",
+      "usage": "reference"
+    },
+    {
+      "name": "android-gpuimage-plus",
+      "repo": "https://github.com/wysaid/android-gpuimage-plus",
+      "ref": "32bf703b9ffe49036853d027bc3350491985feae",
+      "license": "MIT",
+      "usage": "android-runtime"
+    },
+    {
+      "name": "google-timeline-visualizer",
+      "repo": "https://github.com/mahlernim/google-timeline-visualizer",
+      "ref": "785c814a03b32aaa8db965589e7d498d1ded5795",
+      "license": "MIT",
+      "usage": "journey-reference/adaptation"
+    },
+    {
+      "name": "NextLevel",
+      "repo": "https://github.com/NextLevel/NextLevel",
+      "ref": "2fa42500caf7edd7136d23b64d9ecb5684d93d07",
+      "license": "MIT",
+      "usage": "ios-camera-foundation/reference"
+    },
+    {
+      "name": "maplibre-native",
+      "repo": "https://github.com/maplibre/maplibre-native",
+      "ref": "9ee6f1c3b5b97fc2cba1c1042cadef87fa158476",
+      "license": "BSD-2-Clause",
+      "usage": "map-rendering"
+    },
+    {
+      "name": "PhotonCam",
+      "repo": "https://github.com/cinethe-zs/photoncam",
+      "ref": "600827b3d2ef168944e260ce6d93a3a2dedae4d3",
+      "license": "reference only",
+      "usage": "UX research only; do not vendor GPL-dependent assets/code"
+    }
+  ]
+}

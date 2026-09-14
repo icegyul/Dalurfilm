@@ -1,0 +1,35 @@
+MIT License — reference projects (code excerpts NOT shipped)
+
+* google-timeline-visualizer @ 785c814a03b32aaa8db965589e7d498d1ded5795
+  Source: https://github.com/mahlernim/google-timeline-visualizer
+  Usage: journey interaction reference only. DALUR journey engine is original.
+
+* NextLevel @ 2fa42500caf7edd7136d23b64d9ecb5684d93d07
+  Source: https://github.com/NextLevel/NextLevel
+  Usage: iOS AVFoundation camera foundation reference.
+
+MIT texts:
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+android/camera-samples @ 2f10e46fc7a09f7208f8d6de72482ecf3e5fb85a
+Source: https://github.com/android/camera-samples
+License: Apache-2.0 (see repository). Used as implementation reference only.
+DALUR UI and app code are original.

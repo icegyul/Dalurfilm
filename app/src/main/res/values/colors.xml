@@ -1,0 +1,9 @@
+<resources>
+    <color name="dalur_background">#0B0B0D</color>
+    <color name="dalur_surface">#141417</color>
+    <color name="dalur_accent">#E8DCC8</color>
+    <color name="dalur_text">#F5F2EA</color>
+    <color name="dalur_muted">#9A958A</color>
+    <color name="dalur_rec">#E5484D</color>
+    <color name="ic_launcher_background">#0B0B0D</color>
+</resources>

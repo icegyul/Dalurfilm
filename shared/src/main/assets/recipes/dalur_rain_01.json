@@ -1,0 +1,39 @@
+{
+  "id": "dalur_rain_01",
+  "version": 1,
+  "name": "Rain",
+  "description": "Cool quiet overcast.",
+  "creatorType": "dalur",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/dalur_rain_01.cube",
+    "hash": "b89a7c620652dd812ebfc5dd0a3249fa5cff4670ec91ef5d4865761c55f78b3d",
+    "kind": "creative"
+  },
+  "intensity": 0.85,
+  "tone": {
+    "exposure": -0.02,
+    "contrast": -0.04,
+    "highlights": 0.02,
+    "shadows": 0.05,
+    "fade": 0.05
+  },
+  "color": {
+    "temperature": -0.16,
+    "tint": 0.03,
+    "saturation": -0.12
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.5,
+    "halation": 0.02,
+    "bloom": 0.02,
+    "vignette": 0.06,
+    "chromaticAberration": 0.02
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  }
+}

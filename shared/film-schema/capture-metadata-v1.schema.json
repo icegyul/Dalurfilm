@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dalur.film/schemas/capture-metadata-v1.json",
+  "title": "DALUR CaptureMetadata v1",
+  "type": "object",
+  "required": ["mediaId", "timestampMillis", "mediaType", "mediaUri"],
+  "properties": {
+    "mediaId": { "type": "string", "minLength": 1 },
+    "timestampMillis": { "type": "integer", "minimum": 0 },
+    "gps": {
+      "type": "object",
+      "required": ["latitude", "longitude"],
+      "properties": {
+        "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+        "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+        "altitude": { "type": ["number", "null"] },
+        "heading": { "type": ["number", "null"] },
+        "accuracyMeters": { "type": ["number", "null"] }
+      }
+    },
+    "locationUnavailable": { "type": "boolean" },
+    "mediaType": { "type": "string", "enum": ["photo", "video"] },
+    "mediaUri": { "type": "string", "minLength": 1 },
+    "filmRecipeId": { "type": ["string", "null"] },
+    "filmRecipeVersion": { "type": ["integer", "null"] },
+    "codec": { "type": ["string", "null"] },
+    "colorProfile": { "type": ["string", "null"] },
+    "logProfile": { "type": ["string", "null"] },
+    "lutRecipeId": { "type": ["string", "null"] },
+    "lutRecipeVersion": { "type": ["integer", "null"] },
+    "lutHash": { "type": ["string", "null"] },
+    "lutIntensity": { "type": ["number", "null"] }
+  }
+}

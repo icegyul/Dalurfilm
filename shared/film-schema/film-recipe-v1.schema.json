@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dalur.film/schemas/film-recipe-v1.json",
+  "title": "DALUR FilmRecipe v1",
+  "type": "object",
+  "required": ["id", "version", "name"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9_]{3,64}$" },
+    "version": { "type": "integer", "minimum": 1 },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "creatorType": { "type": "string", "enum": ["dalur", "local"] },
+    "lut": {
+      "type": "object",
+      "properties": {
+        "format": { "const": "cube" },
+        "size": { "type": "integer" },
+        "source": { "type": "string" },
+        "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "kind": { "type": "string", "enum": ["creative", "technical", "unknown"] }
+      },
+      "required": ["format", "size", "source", "hash"]
+    },
+    "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+    "tone": { "type": "object" },
+    "color": { "type": "object" },
+    "effects": { "type": "object" },
+    "frame": { "type": "object" }
+  }
+}

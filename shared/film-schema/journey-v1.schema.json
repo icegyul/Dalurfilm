@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dalur.film/schemas/journey-v1.json",
+  "title": "DALUR Journey v1",
+  "type": "object",
+  "required": ["id", "title", "mediaIds", "routePoints", "createdAtMillis"],
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string" },
+    "mediaIds": { "type": "array", "items": { "type": "string" } },
+    "routePoints": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mediaId", "timestampMillis", "gps"],
+        "properties": {
+          "mediaId": { "type": "string" },
+          "timestampMillis": { "type": "integer" },
+          "gps": { "type": "object" }
+        }
+      }
+    },
+    "createdAtMillis": { "type": "integer" },
+    "stylePreset": { "type": "string", "enum": ["MEMORY", "CINEMA", "POSTCARD", "JOURNAL"] },
+    "exportPreset": { "type": "string" }
+  }
+}

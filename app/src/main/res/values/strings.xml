@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">DALUR film</string>
+    <!-- Permissions -->
+    <string name="perm_camera_rationale">DALUR film needs camera access to take photos and videos.</string>
+    <string name="perm_mic_rationale">Microphone is used only for video sound. Photos never need it.</string>
+    <string name="perm_location_rationale">Location is optional. When allowed, captures are placed on your map and journeys.</string>
+    <string name="perm_gallery_rationale">Gallery access is used to save and show your captures.</string>
+    <!-- Easy camera -->
+    <string name="mode_photo">Photo</string>
+    <string name="mode_video">Video</string>
+    <string name="easy_shutter_cd">Shutter</string>
+    <string name="easy_switch_camera_cd">Switch camera</string>
+    <string name="easy_gallery_cd">Last capture</string>
+    <!-- Pro -->
+    <string name="pro_title">PRO</string>
+    <string name="monitor_log">LOG</string>
+    <string name="monitor_lut">LUT</string>
+    <string name="not_supported_on_device">Not supported on this device</string>
+    <!-- Films -->
+    <string name="films_title">Films</string>
+    <string name="film_save">Save film</string>
+    <string name="film_reset">Reset</string>
+    <!-- Map / Journey -->
+    <string name="map_title">Map</string>
+    <string name="journeys_title">Journeys</string>
+    <string name="journey_export">Export</string>
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <!-- Capability -->
+    <string name="capability_title">Capability report</string>
+    <string name="log_unsupported_reason">No genuine Log/flat capture profile is exposed by this device. Log recording is disabled; LUT monitoring and all other supported features remain available.</string>
+</resources>

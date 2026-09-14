@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <external-files-path name="dalur_captures" path="Captures/" />
+    <external-files-path name="dalur_journeys" path="Journeys/" />
+    <external-files-path name="dalur_exports" path="Exports/" />
+    <cache-path name="cache" path="." />
+    <external-cache-path name="external_cache" path="." />
+</paths>
