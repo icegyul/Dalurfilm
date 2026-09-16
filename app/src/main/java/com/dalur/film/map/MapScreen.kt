@@ -78,9 +78,11 @@ fun MapScreen(vm: CameraViewModel, onPlay: (String) -> Unit) {
         Spacer(Modifier.height(12.dp))
         SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
             SegmentedButton(selected = tab == 0, onClick = { tab = 0 },
-                shape = SegmentedButtonDefaults.itemShape(0, 2), label = { Text(stringResource(R.string.map_tab_map)) })
+                shape = SegmentedButtonDefaults.itemShape(0, 3), label = { Text(stringResource(R.string.map_tab_map)) })
             SegmentedButton(selected = tab == 1, onClick = { tab = 1 },
-                shape = SegmentedButtonDefaults.itemShape(1, 2), label = { Text("Journeys") })
+                shape = SegmentedButtonDefaults.itemShape(1, 3), label = { Text("Journeys") })
+            SegmentedButton(selected = tab == 2, onClick = { tab = 2 },
+                shape = SegmentedButtonDefaults.itemShape(2, 3), label = { Text("날씨") })
         }
         Spacer(Modifier.height(8.dp))
         if (tab == 0) {
@@ -155,9 +157,13 @@ fun MapScreen(vm: CameraViewModel, onPlay: (String) -> Unit) {
                 }
             }
         }
-        } else {
+        } else if (tab == 1) {
             Box(Modifier.weight(1f).fillMaxWidth()) {
                 JourneysContent(vm, onPlay)
+            }
+        } else {
+            Box(Modifier.weight(1f).fillMaxWidth()) {
+                EarthZoomWeatherTab(vm)
             }
         }
     }

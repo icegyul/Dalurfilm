@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.Modifier
@@ -67,7 +68,18 @@ private fun NavCircle(
     ) {
         androidx.compose.foundation.layout.Box(
             Modifier.size(size).clip(CircleShape)
-                .background(if (selected) Color(0xFFF5F2EA) else Color(0xFF26262C)),
+                .background(
+                    if (selected) Brush.radialGradient(
+                        colors = listOf(Color(0xFFFDFBF6), Color(0xFFE8DCC8)),
+                    ) else Brush.radialGradient(
+                        colors = listOf(Color(0xFF35353D), Color(0xFF16161A)),
+                    )
+                )
+                .border(
+                    1.dp,
+                    if (selected) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.18f),
+                    CircleShape,
+                ),
             contentAlignment = Alignment.Center,
         ) {
             Icon(icon, contentDescription = desc,
@@ -77,7 +89,7 @@ private fun NavCircle(
         if (label != null) {
             Spacer(Modifier.height(3.dp))
             Text(label,
-                color = if (selected) Color(0xFFF5F2EA) else Color(0xFFF5F2EA).copy(alpha = 0.55f),
+                color = if (selected) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.6f),
                 style = MaterialTheme.typography.labelSmall,
                 maxLines = 1)
         }
@@ -105,7 +117,18 @@ private fun GridCircle(vm: CameraViewModel, mode: Int, size: androidx.compose.ui
         ) {
             androidx.compose.foundation.layout.Box(
                 Modifier.size(s).clip(CircleShape)
-                    .background(if (mode != 0) Color(0xFFF5F2EA) else Color(0xFF26262C)),
+                    .background(
+                        if (mode != 0) Brush.radialGradient(
+                            colors = listOf(Color(0xFFFDFBF6), Color(0xFFE8DCC8)),
+                        ) else Brush.radialGradient(
+                            colors = listOf(Color(0xFF35353D), Color(0xFF16161A)),
+                        )
+                    )
+                    .border(
+                        1.dp,
+                        if (mode != 0) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.18f),
+                        CircleShape,
+                    ),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(Icons.Filled.Grid3x3, contentDescription = "grid",
@@ -114,7 +137,7 @@ private fun GridCircle(vm: CameraViewModel, mode: Int, size: androidx.compose.ui
             }
             Spacer(Modifier.height(3.dp))
             Text("그리드",
-                color = if (mode != 0) Color(0xFFF5F2EA) else Color(0xFFF5F2EA).copy(alpha = 0.55f),
+                color = if (mode != 0) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.6f),
                 style = MaterialTheme.typography.labelSmall, maxLines = 1)
         }
         DropdownMenu(expanded = menu, onDismissRequest = { menu = false }) {
@@ -132,6 +155,104 @@ private fun GridCircle(vm: CameraViewModel, mode: Int, size: androidx.compose.ui
     }
 }
 
+/**
+ * 레퍼런스 이미지의 대각선 캐스케이드 배치. (dx, dy) = 셔터 중심 기준
+ * 왼쪽(dx)·위(dy)로 떨어진 거리. baseX/baseY = 컨테이너 우하단 모서리에서
+ * 셔터 중심까지의 거리. 순수 dp 오프셋이라 겹침 없이 정확히 배치할 수 있다.
+ */
+private fun cascadeOffsetDp(
+    baseX: androidx.compose.ui.unit.Dp,
+    baseY: androidx.compose.ui.unit.Dp,
+    dx: androidx.compose.ui.unit.Dp,
+    dy: androidx.compose.ui.unit.Dp,
+    btnSize: androidx.compose.ui.unit.Dp,
+): Pair<androidx.compose.ui.unit.Dp, androidx.compose.ui.unit.Dp> {
+    val x = -(baseX + dx) + btnSize / 2
+    val y = -(baseY + dy) + btnSize / 2
+    return Pair(x, y)
+}
+
+@Composable
+private fun androidx.compose.foundation.layout.BoxScope.FanSlot(
+    dx: androidx.compose.ui.unit.Dp,
+    dy: androidx.compose.ui.unit.Dp,
+    baseX: androidx.compose.ui.unit.Dp,
+    baseY: androidx.compose.ui.unit.Dp,
+    size: androidx.compose.ui.unit.Dp,
+    content: @Composable () -> Unit,
+) {
+    val (offX, offY) = cascadeOffsetDp(baseX, baseY, dx, dy, size)
+    androidx.compose.foundation.layout.Box(Modifier.align(Alignment.BottomEnd).offset(x = offX, y = offY)) {
+        content()
+    }
+}
+
+/**
+ * 영화 포스터 문법의 세로 썸네일 — 실제 포스터 이미지가 있으면 크롭해 채우고,
+ * 없으면 필름 팔레트 색 위에 하단 스크림 + 타이포로 "포스터처럼" 보이게 한다.
+ * Film Poster Stack과 Film Simulation 라디얼 버튼이 이 하나의 얼굴을 공유한다.
+ */
+@Composable
+private fun PosterFace(
+    recipe: com.dalur.film.shared.FilmRecipe?,
+    modifier: Modifier = Modifier,
+) {
+    androidx.compose.foundation.layout.Box(modifier.background(
+        recipe?.let { com.dalur.film.ui.components.previewColor(it) } ?: Color(0xFF26262C)
+    )) {
+        if (!recipe?.posterUrl.isNullOrBlank()) {
+            coil.compose.AsyncImage(
+                model = recipe?.posterUrl, contentDescription = recipe?.name,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = androidx.compose.ui.layout.ContentScale.Crop)
+        } else {
+            androidx.compose.foundation.layout.Box(
+                Modifier.fillMaxSize().background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.6f)),
+                        startY = 0.35f, endY = Float.POSITIVE_INFINITY,
+                    )
+                )
+            )
+            Text(
+                (recipe?.name ?: "NO FILM").uppercase().take(10),
+                color = Color(0xFFF5F2EA),
+                style = MaterialTheme.typography.labelSmall,
+                maxLines = 2,
+                modifier = Modifier.align(Alignment.BottomStart).padding(5.dp),
+            )
+        }
+    }
+}
+
+/** Film Simulation 라디얼 버튼 — 영화 포스터 문법의 세로 썸네일 + 라벨. */
+@Composable
+private fun FilmSimRadialButton(
+    recipe: com.dalur.film.shared.FilmRecipe?,
+    selected: Boolean,
+    posterW: androidx.compose.ui.unit.Dp,
+    posterH: androidx.compose.ui.unit.Dp,
+    onClick: () -> Unit,
+) {
+    androidx.compose.foundation.layout.Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clip(RoundedCornerShape(10.dp)).clickable(onClick = onClick).padding(2.dp),
+    ) {
+        PosterFace(
+            recipe,
+            Modifier.size(posterW, posterH).clip(RoundedCornerShape(8.dp))
+                .border(
+                    if (selected) 1.5.dp else 0.75.dp,
+                    if (selected) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.35f),
+                    RoundedCornerShape(8.dp),
+                ),
+        )
+        Spacer(Modifier.height(3.dp))
+        Text("필름", color = if (selected) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.6f),
+            style = MaterialTheme.typography.labelSmall, maxLines = 1)
+    }
+}
+
 @Composable
 fun DalurNav(factory: ViewModelProvider.Factory) {
     val nav = rememberNavController()
@@ -146,7 +267,6 @@ fun DalurNav(factory: ViewModelProvider.Factory) {
     val pickableFilms = remember(recipes, owned) {
         recipes.filter { it.priceTier != "premium" || it.id in owned }
     }
-    var filmStripOpen by remember { mutableStateOf(false) }
     Scaffold(
         containerColor = Color.Transparent,
         bottomBar = {
@@ -165,64 +285,8 @@ fun DalurNav(factory: ViewModelProvider.Factory) {
                     Modifier.fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = if (land) 6.dp else 12.dp)
                 ) {
-                // 필름 레시피 슬라이드 패널 — 하단 바 위로 슬라이드되어 뜬다
-                // (참고: Play it 앱의 RECENT MATCHES 패널, 가운데 버튼 위로 펼쳐짐).
-                // 이름·카테고리 없이 포스터만 — 디테일은 필름 탭에서.
-                if (current == Tab.Camera.route) {
-                    androidx.compose.animation.AnimatedVisibility(
-                        visible = filmStripOpen,
-                        enter = androidx.compose.animation.expandVertically(
-                            expandFrom = Alignment.Bottom) + androidx.compose.animation.fadeIn(),
-                        exit = androidx.compose.animation.shrinkVertically(
-                            shrinkTowards = Alignment.Bottom) + androidx.compose.animation.fadeOut(),
-                    ) {
-                        androidx.compose.foundation.layout.Column(
-                            Modifier.fillMaxWidth()
-                                .padding(bottom = 8.dp)
-                                .clip(RoundedCornerShape(24.dp))
-                                .background(Color(0xFF0B0B0D))
-                                .padding(12.dp),
-                        ) {
-                            androidx.compose.foundation.lazy.LazyRow(
-                                Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            ) {
-                                item {
-                                    androidx.compose.foundation.layout.Box(
-                                        Modifier.size(64.dp).clip(RoundedCornerShape(14.dp))
-                                            .background(Color(0xFF26262C))
-                                            .then(if (easy.filmId == null)
-                                                Modifier.border(2.dp, Color(0xFFF5F2EA), RoundedCornerShape(14.dp))
-                                                else Modifier)
-                                            .clickable { vm.selectFilm(null); filmStripOpen = false },
-                                        contentAlignment = Alignment.Center,
-                                    ) {
-                                        Icon(Icons.Filled.NotInterested, "no film",
-                                            tint = Color(0xFFF5F2EA), modifier = Modifier.size(22.dp))
-                                    }
-                                }
-                                items(pickableFilms.size) { i ->
-                                    val r = pickableFilms[i]
-                                    androidx.compose.foundation.layout.Box(
-                                        Modifier.size(64.dp).clip(RoundedCornerShape(14.dp))
-                                            .background(com.dalur.film.ui.components.previewColor(r))
-                                            .then(if (easy.filmId == r.id)
-                                                Modifier.border(2.dp, Color(0xFFF5F2EA), RoundedCornerShape(14.dp))
-                                                else Modifier)
-                                            .clickable { vm.selectFilm(r.id); filmStripOpen = false },
-                                    ) {
-                                        if (!r.posterUrl.isNullOrBlank()) {
-                                            coil.compose.AsyncImage(
-                                                model = r.posterUrl, contentDescription = r.name,
-                                                modifier = Modifier.fillMaxSize(),
-                                                contentScale = androidx.compose.ui.layout.ContentScale.Crop)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                // Film Simulation 진입은 카메라 화면에 큰 피커를 펼치지 않는다 —
+                // Film Poster Stack을 누르면 기존 Film Market(필름 탭)으로 이동한다.
                 androidx.compose.foundation.layout.Box(
                     Modifier.fillMaxWidth()
                 ) {
@@ -233,45 +297,181 @@ fun DalurNav(factory: ViewModelProvider.Factory) {
                         .padding(horizontal = 10.dp, vertical = if (land) 6.dp else 10.dp),
                 ) {
                     val circle = if (land) 40.dp else 46.dp
-                    val shutterSize = if (land) 58.dp else 72.dp
+                    val shutterSize = if (land) 58.dp else 78.dp
                     val onCam = current == Tab.Camera.route
 
-                    // 층 순서(아래에서 위로): 1 필름 · 2 메인메뉴 · 3 카메라 제어.
-                    // 배율줌(4)·노출(5)은 이 바 위 프리뷰 오버레이가 그린다.
-                    // 셔터는 2·3층을 가로지르는 "하나"의 큰 원.
-                    androidx.compose.foundation.layout.Box(
-                        Modifier.fillMaxWidth(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        androidx.compose.foundation.layout.Column(Modifier.fillMaxWidth()) {
-                            // 3층: 앞뒤반전 · 동영상 · (셔터) · 그리드 · 가이드
-                            if (onCam) {
-                                androidx.compose.foundation.layout.Row(
-                                    Modifier.fillMaxWidth(),
-                                    verticalAlignment = Alignment.CenterVertically,
+                    if (onCam) {
+                        // DALUR film Radial Camera UI — 셔터를 중심으로 한 부채꼴 메뉴.
+                        // 바깥 1차: 맵 → 사진 → 동영상 → 반전 (순서 고정, 반전은 카메라
+                        // 전환 아이콘이며 설정 톱니바퀴를 대신하지 않는다).
+                        // 안쪽 2차(핵심): 가이드 → 그리드 → 필름 시뮬레이션.
+                        // 필름 시뮬레이션은 영화 포스터 문법의 세로 썸네일로 표시하고
+                        // 누르면 기존 Film Market(필름 탭)으로 이동한다 — 카메라 화면에서
+                        // 직접 큰 피커를 펼치지 않는다.
+                        val sel = recipes.firstOrNull { it.id == easy.filmId }
+                        val stackFilms = remember(pickableFilms, sel) {
+                            val others = pickableFilms.filter { it.id != sel?.id }.take(2)
+                            (listOf(sel) + others).filterNotNull().reversed()
+                        }
+                        val shutterEnd = 20.dp
+                        val shutterBottom = 36.dp
+                        val baseX = shutterEnd + shutterSize / 2
+                        val baseY = shutterBottom + shutterSize / 2
+                        androidx.compose.foundation.layout.Box(
+                            Modifier.fillMaxWidth().height(shutterSize + 250.dp),
+                        ) {
+                            // 셔터 뒤 은은한 다크 글로우 — 순수 검정 배경 대신
+                            // 클러스터 전체에 깊이감을 주는 radial gradient.
+                            FanSlot(0.dp, 40.dp, baseX, baseY, 300.dp) {
+                                androidx.compose.foundation.layout.Box(
+                                    Modifier.size(300.dp).clip(CircleShape).background(
+                                        Brush.radialGradient(
+                                            colors = listOf(
+                                                Color(0xFF3A3A44).copy(alpha = 0.65f),
+                                                Color(0xFF201F24).copy(alpha = 0.25f),
+                                                Color.Transparent,
+                                            ),
+                                        )
+                                    )
+                                )
+                            }
+                            // 왼쪽 아래: 최근 사진첩 + Film Poster Stack (별도 UI 요소).
+                            androidx.compose.foundation.layout.Row(
+                                Modifier.align(Alignment.BottomStart).padding(start = 4.dp, bottom = 6.dp),
+                                verticalAlignment = Alignment.Bottom,
+                            ) {
+                                val lastCapture = captures.maxByOrNull { it.timestampMillis }
+                                androidx.compose.foundation.layout.Box(
+                                    Modifier.size(58.dp, 78.dp).clip(RoundedCornerShape(10.dp))
+                                        .background(Color(0xFF26262C))
+                                        .border(1.dp, Color(0xFFF5F2EA).copy(alpha = 0.25f), RoundedCornerShape(10.dp))
+                                        .clickable { lastCapture?.let { nav.navigate("playback?uri=${it.mediaUri}") } },
+                                    contentAlignment = Alignment.Center,
                                 ) {
-                                    androidx.compose.foundation.layout.Row(
-                                        Modifier.weight(1f),
-                                        horizontalArrangement = Arrangement.SpaceEvenly,
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        CamCircle(Icons.Filled.Cameraswitch, "front/back", false, circle, "반전") { vm.switchLens() }
-                                        CamCircle(Icons.Filled.Videocam, "video",
-                                            easy.mode == CaptureMode.VIDEO, circle, "동영상") { vm.setMode(CaptureMode.VIDEO) }
-                                    }
-                                    Spacer(Modifier.width(shutterSize + 12.dp))
-                                    androidx.compose.foundation.layout.Row(
-                                        Modifier.weight(1f),
-                                        horizontalArrangement = Arrangement.SpaceEvenly,
-                                        verticalAlignment = Alignment.CenterVertically,
-                                    ) {
-                                        GridCircle(vm, easy.gridMode, circle)
-                                        CamCircle(Icons.Filled.Person, "guide", easy.guideOn, circle, "가이드") { vm.toggleGuide() }
+                                    if (lastCapture != null) {
+                                        coil.compose.AsyncImage(
+                                            model = lastCapture.mediaUri, contentDescription = "최근사진",
+                                            modifier = Modifier.fillMaxSize(),
+                                            contentScale = androidx.compose.ui.layout.ContentScale.Crop)
+                                    } else {
+                                        Icon(Icons.Filled.PhotoLibrary, "사진첩",
+                                            tint = Color(0xFFF5F2EA).copy(alpha = 0.6f), modifier = Modifier.size(22.dp))
                                     }
                                 }
-                                Spacer(Modifier.height(6.dp))
+                                Spacer(Modifier.width(14.dp))
+                                // Film Poster Stack — 현재 필름이 맨 앞, 뒤로 살짝씩 겹침.
+                                androidx.compose.foundation.layout.Box(
+                                    Modifier.width(52.dp + 7.dp * (stackFilms.size - 1)).height(76.dp),
+                                ) {
+                                    stackFilms.forEachIndexed { i, r ->
+                                        val isFront = i == stackFilms.lastIndex
+                                        PosterFace(
+                                            r,
+                                            Modifier.align(Alignment.BottomStart)
+                                                .offset(x = 7.dp * i, y = -(4.dp * i))
+                                                .size(52.dp, 76.dp)
+                                                .clip(RoundedCornerShape(8.dp))
+                                                .border(
+                                                    if (isFront) 1.5.dp else 0.75.dp,
+                                                    if (isFront) Color(0xFFE8DCC8) else Color(0xFFF5F2EA).copy(alpha = 0.3f),
+                                                    RoundedCornerShape(8.dp))
+                                                .then(if (isFront) Modifier.clickable {
+                                                    nav.navigate(Tab.Films.route) { launchSingleTop = true }
+                                                } else Modifier),
+                                        )
+                                    }
+                                    if (stackFilms.isEmpty()) {
+                                        androidx.compose.foundation.layout.Box(
+                                            Modifier.align(Alignment.BottomStart).size(52.dp, 76.dp)
+                                                .clip(RoundedCornerShape(8.dp)).background(Color(0xFF26262C))
+                                                .border(0.75.dp, Color(0xFFF5F2EA).copy(alpha = 0.3f), RoundedCornerShape(8.dp))
+                                                .clickable { nav.navigate(Tab.Films.route) { launchSingleTop = true } },
+                                            contentAlignment = Alignment.Center,
+                                        ) {
+                                            Icon(Icons.Filled.Movie, "필름 시뮬레이션",
+                                                tint = Color(0xFFF5F2EA).copy(alpha = 0.6f), modifier = Modifier.size(20.dp))
+                                        }
+                                    }
+                                }
                             }
-                            // 2층 메인메뉴: 사진첩 · 사진 · (셔터) · 필름 · 지도
+
+                            // 우하단 셔터를 기준으로 한 대각선 캐스케이드 — 레퍼런스
+                            // 이미지와 동일한 지그재그 순서. dx=왼쪽 거리, dy=위쪽 거리.
+                            val step = if (land) 0.72f else 1f
+                            fun s(v: Int) = (v * step).dp
+                            val photoSize = circle * 1.12f
+
+                            // 바깥 1차: 맵 → 사진 → 동영상 → 반전 (순서 고정).
+                            FanSlot(s(126), s(96), baseX, baseY, circle) {
+                                NavCircle(Tab.Map.icon, "맵", current == Tab.Map.route, circle, "맵") {
+                                    nav.navigate(Tab.Map.route) { launchSingleTop = true }
+                                }
+                            }
+                            FanSlot(s(66), s(140), baseX, baseY, photoSize) {
+                                NavCircle(Icons.Filled.PhotoCamera, "사진", easy.mode == CaptureMode.PHOTO, photoSize, "사진") {
+                                    vm.setMode(CaptureMode.PHOTO)
+                                }
+                            }
+                            FanSlot(s(30), s(184), baseX, baseY, circle) {
+                                NavCircle(Icons.Filled.Videocam, "동영상", easy.mode == CaptureMode.VIDEO, circle, "동영상") {
+                                    vm.setMode(CaptureMode.VIDEO)
+                                }
+                            }
+                            FanSlot(s(4), s(224), baseX, baseY, circle) {
+                                NavCircle(Icons.Filled.Cameraswitch, "반전", false, circle, "반전") { vm.switchLens() }
+                            }
+
+                            // 안쪽 2차(핵심): 가이드 → 그리드 → 필름 시뮬레이션 — 셔터와 가장 가깝다.
+                            // (그리드·포스터가 겹치지 않도록 포스터는 옆으로 충분히 띄운다.)
+                            FanSlot(s(28), s(104), baseX, baseY, circle) {
+                                NavCircle(Icons.Filled.CenterFocusWeak, "가이드", easy.guideOn, circle, "가이드") { vm.toggleGuide() }
+                            }
+                            FanSlot(s(64), s(56), baseX, baseY, circle) {
+                                GridCircle(vm, easy.gridMode, circle)
+                            }
+                            val filmSize = if (land) 40.dp to 55.dp else 50.dp to 68.dp
+                            FanSlot(s(132), s(10), baseX, baseY, filmSize.first) {
+                                FilmSimRadialButton(sel, sel != null, filmSize.first, filmSize.second) {
+                                    nav.navigate(Tab.Films.route) { launchSingleTop = true }
+                                }
+                            }
+
+                            // 셔터 뒤 비비드 레드 글로우 — 버튼마다 은은한 그라데이션을
+                            // 주는 것과 같은 문법으로 셔터도 halo를 가진다.
+                            FanSlot(0.dp, 0.dp, baseX, baseY, shutterSize + 46.dp) {
+                                androidx.compose.foundation.layout.Box(
+                                    Modifier.size(shutterSize + 46.dp).clip(CircleShape).background(
+                                        Brush.radialGradient(
+                                            colors = listOf(
+                                                Color(0xFFE5484D).copy(alpha = 0.45f),
+                                                Color.Transparent,
+                                            ),
+                                        )
+                                    )
+                                )
+                            }
+                            // 셔터 — 우하단, 캐스케이드의 중심. 얇은 크림 링 + 비비드 레드 그라데이션.
+                            androidx.compose.foundation.layout.Box(
+                                Modifier.align(Alignment.BottomEnd)
+                                    .padding(end = shutterEnd, bottom = shutterBottom)
+                                    .size(shutterSize)
+                                    .border(3.dp, Color(0xFFF5F2EA), CircleShape)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                                    .background(
+                                        Brush.radialGradient(
+                                            colors = listOf(Color(0xFFFF6259), Color(0xFFD8383F)),
+                                        )
+                                    )
+                                    .clickable { vm.requestCapture() }
+                            )
+                        }
+                    } else {
+                        // 카메라 탭이 아닐 때는 기존 심플 내비 바 유지.
+                        androidx.compose.foundation.layout.Box(
+                            Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
                             androidx.compose.foundation.layout.Row(
                                 Modifier.fillMaxWidth(),
                                 verticalAlignment = Alignment.CenterVertically,
@@ -286,11 +486,8 @@ fun DalurNav(factory: ViewModelProvider.Factory) {
                                             nav.navigate("playback?uri=${it.mediaUri}")
                                         }
                                     }
-                                    // 카메라 탭 버튼 자리에 스틸카메라(사진 모드) 버튼.
-                                    // 다른 탭에서 눌러도 카메라로 돌아오게 한다.
-                                    NavCircle(Icons.Filled.PhotoCamera, "photo",
-                                        onCam && easy.mode == CaptureMode.PHOTO, circle, "사진") {
-                                        if (!onCam) nav.navigate(Tab.Camera.route) { launchSingleTop = true }
+                                    NavCircle(Icons.Filled.PhotoCamera, "photo", false, circle, "사진") {
+                                        nav.navigate(Tab.Camera.route) { launchSingleTop = true }
                                         vm.setMode(CaptureMode.PHOTO)
                                     }
                                 }
@@ -310,48 +507,21 @@ fun DalurNav(factory: ViewModelProvider.Factory) {
                                     }
                                 }
                             }
-                        }
-                        // 2·3층을 덮는 하나뿐인 셔터.
-                        androidx.compose.foundation.layout.Box(
-                            Modifier.size(shutterSize)
-                                .border(3.dp, Color(0xFFF5F2EA), CircleShape)
-                                .padding(4.dp)
-                                .clip(CircleShape)
-                                .background(
-                                    if (easy.isRecording || easy.mode == CaptureMode.VIDEO) Color(0xFFE5484D)
-                                    else Color(0xFFF5F2EA))
-                                .clickable {
-                                    if (!onCam) nav.navigate(Tab.Camera.route) { launchSingleTop = true }
-                                    vm.requestCapture()
-                                }
-                        )
-                        // 필름 손잡이 — 셔터 위, 카드 윗변에 걸치는 작은 필.
-                        // 누르면 위 패널이 슬라이드되어 뜬다 (참고: Play it 앱 FAB).
-                        if (onCam) {
-                            val sel = recipes.firstOrNull { it.id == easy.filmId }
-                            androidx.compose.foundation.layout.Row(
-                                Modifier.align(Alignment.TopCenter)
-                                    .offset(y = (-11).dp)
-                                    .clip(RoundedCornerShape(50))
-                                    .background(Color(0xFF0B0B0D))
-                                    .border(2.dp, Color(0xFFF5F2EA), RoundedCornerShape(50))
-                                    .clickable { filmStripOpen = !filmStripOpen }
-                                    .padding(horizontal = 10.dp, vertical = 3.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                androidx.compose.foundation.layout.Box(
-                                    Modifier.size(12.dp).clip(RoundedCornerShape(3.dp))
-                                        .background(sel?.let { com.dalur.film.ui.components.previewColor(it) }
-                                            ?: Color(0xFF3A3A42)))
-                                Spacer(Modifier.width(4.dp))
-                                Icon(if (filmStripOpen) Icons.Filled.KeyboardArrowDown
-                                    else Icons.Filled.KeyboardArrowUp, "film strip",
-                                    tint = Color(0xFFF5F2EA), modifier = Modifier.size(14.dp))
-                            }
+                            androidx.compose.foundation.layout.Box(
+                                Modifier.size(shutterSize)
+                                    .border(3.dp, Color(0xFFF5F2EA), CircleShape)
+                                    .padding(4.dp)
+                                    .clip(CircleShape)
+                                    .background(Color(0xFFF5F2EA))
+                                    .clickable {
+                                        nav.navigate(Tab.Camera.route) { launchSingleTop = true }
+                                        vm.requestCapture()
+                                    }
+                            )
                         }
                     }
                 }
-                }
+            }
             }
             }
             }
