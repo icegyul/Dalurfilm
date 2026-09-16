@@ -49,9 +49,6 @@ data class ProUiState(
     val resolution: String = "1080p",
     val codecLabel: String = "H.264",
     val monitor: LutMonitorState = LutMonitorState(),
-    val histogramOn: Boolean = true,
-    val zebraOn: Boolean = false,
-    val peakingOn: Boolean = false,
     val audioLevel: Float = 0f,
     val storageFreeText: String = "",
     val recordTarget: RecordTarget = RecordTarget.Internal
@@ -132,9 +129,6 @@ class CameraViewModel(
     fun setFps(v: Int) { _pro.update { it.copy(fps = v) } }
     fun setResolution(v: String) { _pro.update { it.copy(resolution = v) } }
     fun setCodecLabel(v: String) { _pro.update { it.copy(codecLabel = v) } }
-    fun toggleHistogram() { _pro.update { it.copy(histogramOn = !it.histogramOn) } }
-    fun toggleZebra() { _pro.update { it.copy(zebraOn = !it.zebraOn) } }
-    fun togglePeaking() { _pro.update { it.copy(peakingOn = !it.peakingOn) } }
     fun setRecordTarget(t: RecordTarget) { _pro.update { it.copy(recordTarget = t) } }
 
     fun qualitySelector(): QualitySelector = when (_pro.value.resolution) {

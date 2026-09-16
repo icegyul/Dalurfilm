@@ -58,10 +58,9 @@ fun ProCameraPanel(vm: CameraViewModel) {
                 onClick = { vm.setMonitorMode(MonitorMode.LOG) }, label = "LOG")
             ProFilterChip(selected = pro.monitor.mode == MonitorMode.LUT,
                 onClick = { vm.setMonitorMode(MonitorMode.LUT) }, label = "LUT")
-            ProFilterChip(selected = pro.histogramOn, onClick = { vm.toggleHistogram() },
-                label = "Hist")
-            ProFilterChip(selected = pro.zebraOn, onClick = { vm.toggleZebra() },
-                label = "Zebra")
+            // Hist/Zebra chips removed — they toggled state that nothing ever
+            // read (no real overlay was drawn), so they were dead buttons.
+            // Re-add once a real histogram/zebra overlay is implemented.
         }
         Text(
             if (caps?.logSupported == false)

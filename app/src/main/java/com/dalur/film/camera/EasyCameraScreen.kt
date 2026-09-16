@@ -126,6 +126,9 @@ fun EasyCameraScreen(
     val pro by vm.pro.collectAsState()
     val recipes by vm.filmRecipes.collectAsState()
     val owned by app.settings.ownedRecipes.collectAsState(emptySet())
+    val mirrorFrontCamera by app.settings.mirrorFrontCamera.collectAsState(true)
+    val showBattery by app.settings.showBattery.collectAsState(true)
+    val showStorage by app.settings.showStorage.collectAsState(true)
     val caps by vm.capabilityReport.collectAsState()
     val scheme = MaterialTheme.colorScheme
 
@@ -426,6 +429,26 @@ fun EasyCameraScreen(
             scaleType = PreviewView.ScaleType.FILL_CENTER
             implementationMode = PreviewView.ImplementationMode.COMPATIBLE
         }
+    }
+    // 전면 카메라 미러링 — 미리보기만 좌우 반전(셀피를 거울처럼 보이게); 저장되는
+    // 파일은 건드리지 않는다.
+    LaunchedEffect(easy.lensFacing, mirrorFrontCamera) {
+        previewView.scaleX =
+            if (easy.lensFacing == CameraSelector.LENS_FACING_FRONT && mirrorFrontCamera) -1f else 1f
+    }
+    // ---- 배터리 잔량 (설정에서 표시 여부 토글) ----
+    var batteryPct by remember { mutableStateOf<Int?>(null) }
+    DisposableEffect(Unit) {
+        val filter = android.content.IntentFilter(android.content.Intent.ACTION_BATTERY_CHANGED)
+        val receiver = object : android.content.BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: android.content.Intent) {
+                val level = intent.getIntExtra(android.os.BatteryManager.EXTRA_LEVEL, -1)
+                val scale = intent.getIntExtra(android.os.BatteryManager.EXTRA_SCALE, -1)
+                if (level >= 0 && scale > 0) batteryPct = (level * 100) / scale
+            }
+        }
+        ctx.registerReceiver(receiver, filter)
+        onDispose { runCatching { ctx.unregisterReceiver(receiver) } }
     }
 
     // ---- Tap-to-focus — was auto-focus only, so a tap did nothing but wait. ----
@@ -1016,17 +1039,24 @@ fun EasyCameraScreen(
                 Spacer(Modifier.width(8.dp))
                 CompactMeter(l = meterL, r = meterR)
             }
-            // Free space for recording.
-            Spacer(Modifier.width(8.dp))
-            Text(stringResource(R.string.free_gb, freeGb),
-                style = MaterialTheme.typography.labelSmall,
-                color = scheme.onSurfaceVariant, maxLines = 1)
-            Spacer(Modifier.weight(1f))
-            if (easy.isPro) {
-                Text("${pro.fps}fps · ISO ${pro.iso ?: "AUTO"} · ${shutterLabel(pro.shutterSec)}",
-                    style = MaterialTheme.typography.labelSmall, color = scheme.onBackground)
+            // Free space for recording (설정에서 표시 끌 수 있음).
+            if (showStorage) {
                 Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.free_gb, freeGb),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = scheme.onSurfaceVariant, maxLines = 1)
             }
+            // 배터리 잔량 (설정에서 표시 끌 수 있음).
+            if (showBattery && batteryPct != null) {
+                Spacer(Modifier.width(8.dp))
+                Text("${batteryPct}%",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = scheme.onSurfaceVariant, maxLines = 1)
+            }
+            Spacer(Modifier.weight(1f))
+            // PRO의 fps/ISO/셔터는 하단 덱에 이미 전용 줄로 있다(중복 제거) —
+            // 이 타이틀 행에 같이 욱여넣으면 폭이 좁은 화면에서 톱니바퀴·
+            // 펼침 버튼이 밀려나 탭이 안 되는 문제가 있었다.
             IconButton(onClick = onOpenCapability, modifier = Modifier.size(36.dp)) {
                 Icon(Icons.Filled.Info, "capability", tint = scheme.onBackground)
             }
@@ -1101,11 +1131,9 @@ fun EasyCameraScreen(
             if (easy.isPro) {
                 Row(
                     Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("PRO", color = scheme.primary,
-                        style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
-                    Spacer(Modifier.weight(1f))
                     Text("${pro.resolution} · ${pro.fps}fps · ${pro.codecLabel}",
                         color = scheme.onSurfaceVariant,
                         style = MaterialTheme.typography.labelSmall)
@@ -1147,7 +1175,7 @@ fun EasyCameraScreen(
                         Icons.Filled.PersonSearch
                     }
                     gdet == null -> {
-                        gmsg = ctx.getString(R.string.coach_show_face)
+                        // 얼굴 없을 때 자막 없이 아이콘만 — 조용한 게 기본 상태.
                         Icons.Filled.PersonSearch
                     }
                     guideTarget.ordinal > gdet.ordinal -> {
@@ -1163,26 +1191,39 @@ fun EasyCameraScreen(
                         Icons.Filled.CheckCircle
                     }
                 }
-                Column(Modifier.fillMaxWidth().padding(horizontal = 20.dp)) {
-                    Row(Modifier.fillMaxWidth()
-                        .clip(RoundedCornerShape(24.dp))
+                // 작게 + 우측 정렬 — 하단 바의 "가이드" 버튼이 화면 오른쪽에
+                // 있으므로, 그 버튼 바로 위에 오도록 이 카드도 오른쪽에 붙인다.
+                Row(Modifier.fillMaxWidth().padding(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.End) {
+                Column(Modifier.width(190.dp)) {
+                    Row(Modifier
+                        .clip(RoundedCornerShape(18.dp))
                         .background(Color(0xFF1E1E24))
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .padding(horizontal = 8.dp, vertical = 5.dp),
                         verticalAlignment = Alignment.CenterVertically) {
                         Icon(gicon, null, tint = scheme.primary,
-                            modifier = Modifier.size(26.dp))
-                        Spacer(Modifier.width(8.dp))
-                        Text(gmsg,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = scheme.onBackground,
-                            modifier = Modifier.weight(1f))
-                        TextButton(onClick = { guideCardsExpanded = !guideCardsExpanded }) {
+                            modifier = Modifier.size(16.dp))
+                        Spacer(Modifier.width(5.dp))
+                        if (gmsg.isNotBlank()) {
+                            Text(gmsg,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = scheme.onBackground,
+                                maxLines = 1,
+                                modifier = Modifier.weight(1f))
+                        } else {
+                            Spacer(Modifier.weight(1f))
+                        }
+                        TextButton(onClick = { guideCardsExpanded = !guideCardsExpanded },
+                            contentPadding = PaddingValues(horizontal = 4.dp)) {
                             Text(if (guideCardsExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand),
+                                style = MaterialTheme.typography.labelSmall,
                                 color = scheme.onSurfaceVariant)
                         }
-                        TextButton(onClick = { show180 = true }) {
+                        TextButton(onClick = { show180 = true },
+                            contentPadding = PaddingValues(horizontal = 4.dp)) {
                             Text(stringResource(R.string.guide_180_short, thisCam, camCount),
+                                style = MaterialTheme.typography.labelSmall,
                                 color = scheme.primary)
                         }
                     }
@@ -1229,6 +1270,7 @@ fun EasyCameraScreen(
                     }
                     }
                 }
+                }
             }
             // 필름 선택은 하단 메인 바(DalurNav)에 붙어 있다 — 여기선 아무것도 안 그린다.
         }
@@ -1266,7 +1308,7 @@ fun EasyCameraScreen(
                         Icons.Filled.PersonSearch
                     }
                     gdet == null -> {
-                        gmsg = ctx.getString(R.string.coach_show_face)
+                        // 얼굴 없을 때 자막 없이 아이콘만 — 조용한 게 기본 상태.
                         Icons.Filled.PersonSearch
                     }
                     guideTarget.ordinal > gdet.ordinal -> {
@@ -1292,11 +1334,15 @@ fun EasyCameraScreen(
                         Icon(gicon, null, tint = scheme.primary,
                             modifier = Modifier.size(26.dp))
                         Spacer(Modifier.width(8.dp))
-                        Text(gmsg,
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = scheme.onBackground,
-                            modifier = Modifier.weight(1f))
+                        if (gmsg.isNotBlank()) {
+                            Text(gmsg,
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = scheme.onBackground,
+                                modifier = Modifier.weight(1f))
+                        } else {
+                            Spacer(Modifier.weight(1f))
+                        }
                         TextButton(onClick = { guideCardsExpanded = !guideCardsExpanded }) {
                             Text(if (guideCardsExpanded) stringResource(R.string.collapse) else stringResource(R.string.expand),
                                 color = scheme.onSurfaceVariant)
@@ -1629,11 +1675,6 @@ private fun StageHud(text: String, accent: Color = Color(0xFFF5F2EA)) {
         Text(text, color = accent, style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.SemiBold)
     }
-}
-
-private fun shutterLabel(sec: Double?): String {
-    if (sec == null) return "SHUTTER AUTO"
-    return if (sec >= 1.0) "${sec.roundToInt()}s" else "1/${(1.0 / sec).roundToInt()}"
 }
 
 @Composable
