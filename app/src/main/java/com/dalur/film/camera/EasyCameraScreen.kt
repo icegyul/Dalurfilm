@@ -85,6 +85,16 @@ import com.dalur.film.guide.LookRoom
 import com.dalur.film.guide.stableHeadroom
 import com.dalur.film.guide.stableSubjectPosition
 import com.dalur.film.guide.stableLookRoom
+import com.dalur.film.guide.pickHint
+import com.dalur.film.guide.CameraAngle
+import com.dalur.film.guide.stableCameraAngle
+import com.dalur.film.guide.stableDutch
+import com.dalur.film.guide.MovementDirection
+import com.dalur.film.guide.MovementTracker
+import com.dalur.film.guide.Stability
+import com.dalur.film.guide.CameraMovement
+import com.dalur.film.guide.stableStability
+import com.dalur.film.guide.classifyCameraMovement
 import com.dalur.film.guide.SilhouetteGuide
 import com.dalur.film.guide.Shoot180Setup
 import com.dalur.film.guide.shoot180Summary
@@ -194,6 +204,10 @@ fun EasyCameraScreen(
     var headroomState by remember { mutableStateOf<Headroom?>(null) }
     var positionState by remember { mutableStateOf<SubjectPosition?>(null) }
     var lookRoomState by remember { mutableStateOf<LookRoom?>(null) }
+    // GUIDE Phase 5 — Movement Room. remember{} so the streak survives
+    // recomposition but not a fresh camera session.
+    val movementTracker = remember { MovementTracker() }
+    var movementState by remember { mutableStateOf(MovementDirection.NONE) }
     // Position is a fact, not a correctness judgment (a rule-of-thirds
     // placement is often deliberate) — so it only flashes briefly when it
     // CHANGES, instead of sitting on screen like the Headroom hint does.
@@ -203,6 +217,96 @@ fun EasyCameraScreen(
             positionFlashVisible = true
             kotlinx.coroutines.delay(1500)
             positionFlashVisible = false
+        }
+    }
+    // GUIDE Phase 2 — Look Room. Same "flash on change, not a judgment" rule
+    // as Subject Position (facing a certain way isn't a mistake).
+    var lookRoomFlashVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(lookRoomState) {
+        if (lookRoomState != null && lookRoomState != LookRoom.NEUTRAL) {
+            lookRoomFlashVisible = true
+            kotlinx.coroutines.delay(1500)
+            lookRoomFlashVisible = false
+        }
+    }
+    // GUIDE Phase 5 — Movement Room. Same flash pattern; a confirmed
+    // direction is itself already debounced by MovementTracker's streak, so
+    // this flash just controls how long it stays ON screen once confirmed.
+    var movementFlashVisible by remember { mutableStateOf(false) }
+    LaunchedEffect(movementState) {
+        if (movementState != MovementDirection.NONE) {
+            movementFlashVisible = true
+            kotlinx.coroutines.delay(1500)
+            movementFlashVisible = false
+        }
+    }
+    // GUIDE Phase 4 — Orientation. Fully independent of the face pipeline
+    // above (sensor only), so it can't ever black-screen the camera bind if
+    // something here throws — everything stays inside runCatching.
+    var cameraAngleState by remember { mutableStateOf<CameraAngle?>(null) }
+    var isDutch by remember { mutableStateOf(false) }
+    // GUIDE Phase 5 — Stability + camera movement. Differentiates the SAME
+    // orientation angles Phase 4 reads (one sensor pipeline, not a second
+    // raw gyroscope) rather than tracked separately.
+    var stabilityState by remember { mutableStateOf<Stability?>(null) }
+    var cameraMovement by remember { mutableStateOf(CameraMovement.STATIC) }
+    DisposableEffect(guideOn) {
+        if (!guideOn) return@DisposableEffect onDispose {}
+        val sensorManager = ctx.getSystemService(Context.SENSOR_SERVICE) as? android.hardware.SensorManager
+        val rotationSensor = sensorManager?.getDefaultSensor(android.hardware.Sensor.TYPE_ROTATION_VECTOR)
+        var prevAngles: FloatArray? = null
+        var prevAnglesMs = 0L
+        val listener = object : android.hardware.SensorEventListener {
+            override fun onSensorChanged(event: android.hardware.SensorEvent) {
+                runCatching {
+                    val rotationMatrix = FloatArray(9)
+                    android.hardware.SensorManager.getRotationMatrixFromVector(rotationMatrix, event.values)
+                    // Remap for a phone held upright (portrait) like a
+                    // viewfinder, not lying flat — the standard Android
+                    // pattern for "device tilt while held vertically".
+                    val remapped = FloatArray(9)
+                    android.hardware.SensorManager.remapCoordinateSystem(
+                        rotationMatrix,
+                        android.hardware.SensorManager.AXIS_X,
+                        android.hardware.SensorManager.AXIS_Z,
+                        remapped)
+                    val orientationAngles = FloatArray(3)
+                    android.hardware.SensorManager.getOrientation(remapped, orientationAngles)
+                    val pitchDegrees = Math.toDegrees(orientationAngles[1].toDouble()).toFloat()
+                    val rollDegrees = Math.toDegrees(orientationAngles[2].toDouble()).toFloat()
+                    cameraAngleState = stableCameraAngle(pitchDegrees, cameraAngleState)
+                    isDutch = stableDutch(rollDegrees, isDutch)
+
+                    // Phase 5: rate of change since the last sample (deg/sec).
+                    val nowMs = SystemClock.elapsedRealtime()
+                    val prev = prevAngles
+                    if (prev != null && nowMs > prevAnglesMs) {
+                        val dtSec = (nowMs - prevAnglesMs) / 1000f
+                        val dAzimuth = Math.toDegrees((orientationAngles[0] - prev[0]).toDouble()).toFloat()
+                        val dPitch = Math.toDegrees((orientationAngles[1] - prev[1]).toDouble()).toFloat()
+                        val dRoll = Math.toDegrees((orientationAngles[2] - prev[2]).toDouble()).toFloat()
+                        val panRate = dAzimuth / dtSec
+                        val tiltRate = dPitch / dtSec
+                        val rollRate = dRoll / dtSec
+                        val combinedRate = kotlin.math.abs(panRate) + kotlin.math.abs(tiltRate) + kotlin.math.abs(rollRate)
+                        stabilityState = stableStability(combinedRate, stabilityState)
+                        cameraMovement = classifyCameraMovement(panRate, tiltRate)
+                    }
+                    prevAngles = orientationAngles
+                    prevAnglesMs = nowMs
+                }
+            }
+            override fun onAccuracyChanged(sensor: android.hardware.Sensor, accuracy: Int) {}
+        }
+        if (rotationSensor != null) {
+            sensorManager.registerListener(listener, rotationSensor, android.hardware.SensorManager.SENSOR_DELAY_UI)
+        }
+        onDispose {
+            if (rotationSensor != null) sensorManager?.unregisterListener(listener)
+            cameraAngleState = null
+            stabilityState = null
+            cameraMovement = CameraMovement.STATIC
+            isDutch = false
         }
     }
     var detectorOk by remember { mutableStateOf(true) }
@@ -398,11 +502,16 @@ fun EasyCameraScreen(
                                     lookRoomState = metrics?.let { m ->
                                         stableLookRoom(m.yawDegrees, lookRoomState)
                                     }
+                                    movementState = metrics?.let { m ->
+                                        movementTracker.update(m.centerXRatio)
+                                    } ?: run { movementTracker.reset(); MovementDirection.NONE }
                                 } else {
                                     guideDetected = null
                                     headroomState = null
                                     positionState = null
                                     lookRoomState = null
+                                    movementTracker.reset()
+                                    movementState = MovementDirection.NONE
                                 }
                             })
                     }
@@ -711,24 +820,54 @@ fun EasyCameraScreen(
         }
     }
 
-    // GUIDE Phase 1 hint line — Headroom (a real correction, stays on screen
-    // while it holds) takes priority over Subject Position (a fact, only
-    // flashes on change). Shared by the portrait and landscape coaching cards
-    // below so the two don't drift. Null when there's nothing worth saying —
-    // silence is the default state, not every frame gets a hint.
+    // GUIDE Phase 3 (mini Shot Coach) hint line — Evaluator/Priority step.
+    // Each candidate is null unless ITS OWN timing says show-now (Headroom
+    // and Stability stay up while the problem holds; Position/Look Room/
+    // Movement Room flash briefly on change — see the LaunchedEffect+delay
+    // above); pickHint just arbitrates between them in priority order and
+    // returns exactly one, or none. Shared by the portrait and landscape
+    // coaching cards below so the two don't drift. Null is the default
+    // state, not every frame gets a hint.
+    //
+    // Priority, highest first: Stability (a shaky shot is a real technical
+    // defect, ranks above framing) > Headroom > Subject Position > Look Room
+    // > Movement Room > Orientation (a deliberate low/high/Dutch angle is a
+    // creative choice far more often than a mistake, so it only shows when
+    // nothing else has anything to say).
     @Composable
     fun GuideSignalHint() {
-        val text = when {
-            headroomState == Headroom.TOO_TIGHT -> stringResource(R.string.hint_headroom_too_tight)
-            headroomState == Headroom.TOO_MUCH -> stringResource(R.string.hint_headroom_too_much)
-            positionFlashVisible -> when (positionState) {
-                SubjectPosition.LEFT_THIRD -> stringResource(R.string.hint_position_left)
-                SubjectPosition.CENTER -> stringResource(R.string.hint_position_center)
-                SubjectPosition.RIGHT_THIRD -> stringResource(R.string.hint_position_right)
-                null -> null
-            }
+        val stabilityHint = if (stabilityState == Stability.SHAKY) stringResource(R.string.hint_shaky) else null
+        val headroomHint = when (headroomState) {
+            Headroom.TOO_TIGHT -> stringResource(R.string.hint_headroom_too_tight)
+            Headroom.TOO_MUCH -> stringResource(R.string.hint_headroom_too_much)
             else -> null
         }
+        val positionHint = if (positionFlashVisible) when (positionState) {
+            SubjectPosition.LEFT_THIRD -> stringResource(R.string.hint_position_left)
+            SubjectPosition.CENTER -> stringResource(R.string.hint_position_center)
+            SubjectPosition.RIGHT_THIRD -> stringResource(R.string.hint_position_right)
+            null -> null
+        } else null
+        val lookRoomHint = if (lookRoomFlashVisible) when (lookRoomState) {
+            LookRoom.LOOK_LEFT -> stringResource(R.string.hint_look_left)
+            LookRoom.LOOK_RIGHT -> stringResource(R.string.hint_look_right)
+            else -> null
+        } else null
+        val movementHint = if (movementFlashVisible) when (movementState) {
+            MovementDirection.LEFT -> stringResource(R.string.hint_movement_left)
+            MovementDirection.RIGHT -> stringResource(R.string.hint_movement_right)
+            MovementDirection.NONE -> null
+        } else null
+        val orientationHint = when {
+            isDutch -> stringResource(R.string.hint_dutch)
+            cameraAngleState == CameraAngle.HIGH_ANGLE -> stringResource(R.string.hint_angle_high)
+            cameraAngleState == CameraAngle.LOW_ANGLE -> stringResource(R.string.hint_angle_low)
+            cameraAngleState == CameraAngle.TOP_DOWN -> stringResource(R.string.hint_angle_top_down)
+            cameraAngleState == CameraAngle.EXTREME_LOW -> stringResource(R.string.hint_angle_extreme_low)
+            else -> null
+        }
+        val text = pickHint(listOf(
+            stabilityHint, headroomHint, positionHint, lookRoomHint, movementHint, orientationHint))
         if (text != null) {
             Text(text, color = Color(0xFFE8B93A),
                 style = MaterialTheme.typography.labelMedium, fontWeight = FontWeight.Bold,

@@ -110,3 +110,141 @@ fun stableLookRoom(yawDegrees: Float, previous: LookRoom?): LookRoom = when (pre
     LookRoom.LOOK_RIGHT ->
         if (yawDegrees > -LOOK_THRESHOLD + LOOK_MARGIN) bucketLook(yawDegrees) else previous
 }
+
+// ---- GUIDE Phase 4 — Orientation (device tilt, sensor-only, no face needed) ----
+enum class CameraAngle { TOP_DOWN, EXTREME_LOW, LOW_ANGLE, EYE_LEVEL, HIGH_ANGLE }
+
+private const val ANGLE_MARGIN = 5f
+
+private fun bucketAngle(pitchDegrees: Float): CameraAngle = when {
+    pitchDegrees > 60f -> CameraAngle.TOP_DOWN
+    pitchDegrees > 15f -> CameraAngle.HIGH_ANGLE
+    pitchDegrees < -60f -> CameraAngle.EXTREME_LOW
+    pitchDegrees < -15f -> CameraAngle.LOW_ANGLE
+    else -> CameraAngle.EYE_LEVEL
+}
+
+/**
+ * pitchDegrees: positive = lens tilted DOWN toward the ground, negative =
+ * tilted UP toward the sky, from the rotation-vector sensor remapped for a
+ * phone held upright like a viewfinder (see EasyCameraScreen's sensor
+ * listener). The remap's sign convention is a common Android pattern but
+ * hasn't been confirmed against this specific device yet — verify TOP_DOWN
+ * really fires when the phone points at the floor before shipping this.
+ */
+fun stableCameraAngle(pitchDegrees: Float, previous: CameraAngle?): CameraAngle {
+    if (previous == null) return bucketAngle(pitchDegrees)
+    val staysInBand = when (previous) {
+        CameraAngle.TOP_DOWN -> pitchDegrees > 60f - ANGLE_MARGIN
+        CameraAngle.HIGH_ANGLE -> pitchDegrees > 15f - ANGLE_MARGIN && pitchDegrees < 60f + ANGLE_MARGIN
+        CameraAngle.EYE_LEVEL -> pitchDegrees > -15f - ANGLE_MARGIN && pitchDegrees < 15f + ANGLE_MARGIN
+        CameraAngle.LOW_ANGLE -> pitchDegrees < -15f + ANGLE_MARGIN && pitchDegrees > -60f - ANGLE_MARGIN
+        CameraAngle.EXTREME_LOW -> pitchDegrees < -60f + ANGLE_MARGIN
+    }
+    return if (staysInBand) previous else bucketAngle(pitchDegrees)
+}
+
+private const val DUTCH_THRESHOLD = 4f
+private const val DUTCH_MARGIN = 2f
+
+/** Whether the horizon is tilted enough to call it a Dutch angle, with
+ *  hysteresis so a roll sitting right at the threshold doesn't flicker. */
+fun stableDutch(rollDegrees: Float, previouslyDutch: Boolean): Boolean =
+    if (previouslyDutch) abs(rollDegrees) > DUTCH_THRESHOLD - DUTCH_MARGIN
+    else abs(rollDegrees) > DUTCH_THRESHOLD + DUTCH_MARGIN
+
+// ---- GUIDE Phase 5 — Movement Room (face-position tracking) ----
+enum class MovementDirection { LEFT, RIGHT, NONE }
+
+/**
+ * Face-position tracking is noisier frame to frame than a single bounding-
+ * box reading (ML Kit's box jitters a little even for a still subject), so
+ * this needs its OWN smoothing on top of the Subject Position hysteresis
+ * above: a direction only counts once it holds for [MOVE_CONFIRM_FRAMES]
+ * consecutive readings past a deadzone, not off one frame's delta. Stateful
+ * (needs a short history) unlike the stateless stable*() functions above —
+ * keep one instance per camera session and call [update] on every new
+ * FaceMetrics; call [reset] when the face is lost so a re-appearing face
+ * doesn't get credited with a fake jump.
+ */
+class MovementTracker {
+    private var lastX: Float? = null
+    private var streakDirection: Int = 0
+    private var streakCount: Int = 0
+
+    fun update(centerXRatio: Float): MovementDirection {
+        val prev = lastX
+        lastX = centerXRatio
+        if (prev == null) return MovementDirection.NONE
+        val delta = centerXRatio - prev
+        val dir = when {
+            delta > MOVE_DEADZONE -> 1
+            delta < -MOVE_DEADZONE -> -1
+            else -> 0
+        }
+        if (dir != 0 && dir == streakDirection) streakCount++
+        else { streakDirection = dir; streakCount = if (dir != 0) 1 else 0 }
+        return if (streakCount >= MOVE_CONFIRM_FRAMES) {
+            if (streakDirection > 0) MovementDirection.RIGHT else MovementDirection.LEFT
+        } else MovementDirection.NONE
+    }
+
+    fun reset() {
+        lastX = null
+        streakDirection = 0
+        streakCount = 0
+    }
+
+    private companion object {
+        const val MOVE_DEADZONE = 0.015f
+        const val MOVE_CONFIRM_FRAMES = 3
+    }
+}
+
+// ---- GUIDE Phase 5 — Stability + camera movement (sensor, differentiated) ----
+enum class Stability { STABLE, SHAKY }
+enum class CameraMovement { STATIC, PAN, TILT }
+
+private const val SHAKE_ENTER = 25f // combined |Δpitch|+|Δroll|+|Δazimuth|, deg/sec
+private const val SHAKE_EXIT = 15f
+
+/** Real technical defect (motion-blurred footage), not a style choice —
+ *  unlike Orientation, this one genuinely warrants a persistent warning. */
+fun stableStability(combinedRateDegPerSec: Float, previous: Stability?): Stability = when (previous) {
+    null, Stability.STABLE -> if (combinedRateDegPerSec > SHAKE_ENTER) Stability.SHAKY else Stability.STABLE
+    Stability.SHAKY -> if (combinedRateDegPerSec < SHAKE_EXIT) Stability.STABLE else Stability.SHAKY
+}
+
+private const val PAN_TILT_THRESHOLD = 8f // deg/sec
+
+/**
+ * Distinguishes a deliberate pan/tilt from holding still, reusing the SAME
+ * remapped orientation angles Phase 4 already computes (differentiated over
+ * time in EasyCameraScreen's sensor listener) — one sensor pipeline, not a
+ * second raw gyroscope reading. Computed for future use; not wired into a
+ * Hint yet (PAN/TILT are usually deliberate cinematography, and STATIC would
+ * otherwise be on screen almost all the time, which fights "silence is
+ * default"). Thresholds and the pan/tilt axis mapping inherit Phase 4's
+ * unverified sign convention — recheck together once that's calibrated.
+ */
+fun classifyCameraMovement(panRateDegPerSec: Float, tiltRateDegPerSec: Float): CameraMovement {
+    val panMag = abs(panRateDegPerSec)
+    val tiltMag = abs(tiltRateDegPerSec)
+    return when {
+        panMag < PAN_TILT_THRESHOLD && tiltMag < PAN_TILT_THRESHOLD -> CameraMovement.STATIC
+        panMag >= tiltMag -> CameraMovement.PAN
+        else -> CameraMovement.TILT
+    }
+}
+
+// ---- GUIDE Phase 3 (mini) — Evaluator/Priority step ----
+// A candidate list is already IN PRIORITY ORDER (index 0 = shown first, per
+// the confirmed order: Headroom > Subject Position > Look Room). Each signal
+// decides its OWN on-screen timing (Headroom stays up while the problem
+// holds; Position/Look Room flash briefly on change — see the
+// LaunchedEffect(...)+delay pattern in EasyCameraScreen) by simply being
+// null in this list when it has nothing to say right now. This function only
+// arbitrates BETWEEN signals — exactly one wins, or none do. That "none do"
+// case is the normal state, not a fallback.
+fun pickHint(candidatesInPriorityOrder: List<String?>): String? =
+    candidatesInPriorityOrder.firstOrNull { it != null }

@@ -62,6 +62,19 @@
     <string name="hint_position_left">Left third</string>
     <string name="hint_position_center">Center</string>
     <string name="hint_position_right">Right third</string>
+    <!-- GUIDE Phase 2: Look Room hints (yaw sign not yet device-calibrated) -->
+    <string name="hint_look_left">Looking left — leave room on the left</string>
+    <string name="hint_look_right">Looking right — leave room on the right</string>
+    <!-- GUIDE Phase 4: Orientation hints (sensor-based, sign not yet device-calibrated) -->
+    <string name="hint_angle_high">High angle</string>
+    <string name="hint_angle_low">Low angle</string>
+    <string name="hint_angle_top_down">Top down</string>
+    <string name="hint_angle_extreme_low">Extreme low angle</string>
+    <string name="hint_dutch">Dutch angle</string>
+    <!-- GUIDE Phase 5: Movement Room + Stability hints -->
+    <string name="hint_movement_left">Moving — leave room on the left</string>
+    <string name="hint_movement_right">Moving — leave room on the right</string>
+    <string name="hint_shaky">Shaky — hold steady</string>
     <!-- Common -->
     <string name="expand">More</string>
     <string name="collapse">Less</string>
