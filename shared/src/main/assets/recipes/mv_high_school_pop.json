@@ -1,0 +1,65 @@
+{
+  "id": "mv_high_school_pop",
+  "version": 1,
+  "name": "good 4 u",
+  "description": "good 4 u에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Olivia Rodrigo - good 4 u",
+  "colorDna": [
+    "Blue",
+    "Red",
+    "Yellow"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "interior",
+    "day",
+    "exterior"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "music video",
+    "red",
+    "yellow"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#3E6FE0",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_high_school_pop.cube",
+    "hash": "70e99727b58cf0d8dc41198a6f1283b8820b22043fd2a78ba7af2202c9b37044",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.14,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0,
+    "tint": 0.02,
+    "saturation": 0.3
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "High School Pop",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/dLtOE7LHFl5LxDUx5RAz07KqQPX.jpg"
+}

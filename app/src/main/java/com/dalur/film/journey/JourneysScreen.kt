@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 import java.util.UUID
 
 @Composable
-fun JourneysScreen(vm: CameraViewModel, onPlay: (String) -> Unit) {
+fun JourneysContent(vm: CameraViewModel, onPlay: (String) -> Unit) {
     val ctx = LocalContext.current
     val app = ctx.applicationContext as com.dalur.film.DalurApp
     val captures by vm.allCaptures.collectAsState()

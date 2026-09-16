@@ -145,6 +145,14 @@ dependencies {
     // configurable; no unlicensed endpoint is hard-coded (see MapScreen + docs).
     implementation("org.maplibre.gl:android-sdk:11.12.2")
 
+    // ---- Poster images (TMDB file URLs baked into seeds; attribution in UI) ----
+    implementation("io.coil-kt:coil-compose:2.6.0")
+
+    // ---- On-device subject detection (face size → shot scale; no server) ----
+    // Reference: googlesamples/mlkit @ master, Apache-2.0. Bundled model, works
+    // offline. If init fails on device, Guide runs manual-only (NOT_SUPPORTED).
+    implementation("com.google.mlkit:face-detection:16.1.7")
+
     // Project modules
     implementation(project(":shared"))
 

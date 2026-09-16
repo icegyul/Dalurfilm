@@ -1,0 +1,62 @@
+{
+  "id": "film_desert_chrome",
+  "version": 1,
+  "name": "Mad Max: Fury Road",
+  "description": "Mad Max: Fury Road에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Mad Max: Fury Road",
+  "colorDna": [
+    "Orange",
+    "Cyan"
+  ],
+  "scenes": [
+    "cinema",
+    "exterior",
+    "day",
+    "night",
+    "city"
+  ],
+  "tags": [
+    "cinematic",
+    "cyan",
+    "film",
+    "orange"
+  ],
+  "priceTier": "free",
+  "previewTint": "#FF8A3D",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_desert_chrome.cube",
+    "hash": "6440c37a3691180ef26a9e230a12960ef6be3434a7bf9745bc172ce390b0d9e4",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.05,
+    "contrast": 0.16,
+    "highlights": 0,
+    "shadows": -0.02,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.3,
+    "tint": 0,
+    "saturation": 0.2
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Desert Chrome",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/ulcAi4dKpAjHwYGS08vNyx9H6I9.jpg"
+}

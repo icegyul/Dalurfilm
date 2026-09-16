@@ -1,0 +1,63 @@
+{
+  "id": "drama_tropical_grit",
+  "version": 1,
+  "name": "Narcos",
+  "description": "Narcos에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Narcos",
+  "colorDna": [
+    "Green",
+    "Yellow",
+    "Brown"
+  ],
+  "scenes": [
+    "interior",
+    "night",
+    "day",
+    "exterior"
+  ],
+  "tags": [
+    "brown",
+    "cinematic",
+    "drama",
+    "green",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#A8A93A",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_tropical_grit.cube",
+    "hash": "4baeaf033f6cfacbdc009c9cf64ec3ae37424a77243d3fe0db737b94dc58b344",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.02,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.15,
+    "tint": -0.05,
+    "saturation": 0.15
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Tropical Grit",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/rTmal9fDbwh5F0waol2hq35U4ah.jpg"
+}

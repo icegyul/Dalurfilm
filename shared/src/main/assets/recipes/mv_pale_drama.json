@@ -1,0 +1,64 @@
+{
+  "id": "mv_pale_drama",
+  "version": 1,
+  "name": "Chandelier",
+  "description": "Chandelier에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Sia - Chandelier",
+  "colorDna": [
+    "Blue",
+    "Gray",
+    "Beige"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "interior",
+    "day"
+  ],
+  "tags": [
+    "beige",
+    "blue",
+    "cinematic",
+    "gray",
+    "music video"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#9AA8B8",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_pale_drama.cube",
+    "hash": "f7b3c4449c31d754c88b66af0c150701243a1ad36949204d52a5b3891aeffeac",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.05,
+    "contrast": 0.04,
+    "highlights": 0,
+    "shadows": 0.02,
+    "fade": 0.04
+  },
+  "color": {
+    "temperature": -0.12,
+    "tint": 0,
+    "saturation": -0.3
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Pale Drama",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/kRfcNqZ7f3o1vPWFGQtaTwDzPGw.jpg"
+}

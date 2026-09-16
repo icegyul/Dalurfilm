@@ -1,0 +1,64 @@
+{
+  "id": "film_dirty_rain",
+  "version": 1,
+  "name": "Se7en",
+  "description": "Se7en에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Se7en",
+  "colorDna": [
+    "Green",
+    "Brown",
+    "Yellow"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "interior",
+    "exterior",
+    "day"
+  ],
+  "tags": [
+    "brown",
+    "cinematic",
+    "film",
+    "green",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#6E7B3A",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_dirty_rain.cube",
+    "hash": "0534b20233976f77e4ff89986cb434c434fc1a9035780a9ee8948eed1559d80c",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.18,
+    "contrast": 0.2,
+    "highlights": 0,
+    "shadows": -0.05,
+    "fade": 0
+  },
+  "color": {
+    "temperature": -0.1,
+    "tint": -0.06,
+    "saturation": -0.3
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Dirty Rain",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/191nKfP0ehp3uIvWqgPbFmI4lv9.jpg"
+}

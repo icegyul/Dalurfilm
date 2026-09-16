@@ -7,23 +7,52 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import com.dalur.film.R
 import com.dalur.film.camera.CameraViewModel
+import com.dalur.film.journey.JourneysContent
 import com.dalur.film.shared.CaptureMetadata
 import com.dalur.film.shared.orderCapturesChronologically
 import com.dalur.film.ui.components.DalurHeader
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapScreen(vm: CameraViewModel) {
+fun MapScreen(vm: CameraViewModel, onPlay: (String) -> Unit) {
     val ctx = LocalContext.current
     val captures by vm.allCaptures.collectAsState()
     val scope = rememberCoroutineScope()
     var mapError by remember { mutableStateOf<String?>(null) }
     var selectedId by remember { mutableStateOf<String?>(null) }
+    var tab by remember { mutableStateOf(0) }
     var controller by remember { mutableStateOf<MapOverlayController?>(null) }
+    var mapView by remember { mutableStateOf<org.maplibre.android.maps.MapView?>(null) }
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // MapView needs the host lifecycle (without onStart/onResume the map stays black).
+    DisposableEffect(lifecycleOwner) {
+        val obs = LifecycleEventObserver { _, e ->
+            when (e) {
+                Lifecycle.Event.ON_START -> mapView?.onStart()
+                Lifecycle.Event.ON_RESUME -> mapView?.onResume()
+                Lifecycle.Event.ON_PAUSE -> mapView?.onPause()
+                Lifecycle.Event.ON_STOP -> mapView?.onStop()
+                Lifecycle.Event.ON_DESTROY -> runCatching { mapView?.onDestroy() }
+                else -> Unit
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(obs)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(obs)
+            runCatching { mapView?.onDestroy() }
+        }
+    }
 
     LaunchedEffect(Unit) {
         scope.launch {
@@ -43,10 +72,18 @@ fun MapScreen(vm: CameraViewModel) {
 
     Column(Modifier.fillMaxSize().padding(horizontal = 16.dp, vertical = 12.dp)) {
         DalurHeader(
-            title = "Map",
+            title = stringResource(R.string.map_title),
             subtitle = "${gpsCaptures.size} located · ${captures.size - gpsCaptures.size} without location (saved anyway, never invented)."
         )
         Spacer(Modifier.height(12.dp))
+        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+            SegmentedButton(selected = tab == 0, onClick = { tab = 0 },
+                shape = SegmentedButtonDefaults.itemShape(0, 2), label = { Text(stringResource(R.string.map_tab_map)) })
+            SegmentedButton(selected = tab == 1, onClick = { tab = 1 },
+                shape = SegmentedButtonDefaults.itemShape(1, 2), label = { Text("Journeys") })
+        }
+        Spacer(Modifier.height(8.dp))
+        if (tab == 0) {
         Box(Modifier.weight(1f).fillMaxWidth()) {
             if (mapError != null) {
                 Card { Text(mapError!!, Modifier.padding(16.dp)) }
@@ -57,14 +94,17 @@ fun MapScreen(vm: CameraViewModel) {
                             org.maplibre.android.MapLibre.getInstance(c)
                             org.maplibre.android.maps.MapView(c).apply {
                                 onCreate(null)
+                                mapView = this
                                 getMapAsync { map ->
                                     try {
                                         map.addOnMapClickListener { _ -> selectedId = null; true }
                                         map.setOnMarkerClickListener { m ->
                                             selectedId = m.title; true
                                         }
-                                        // Configurable style; demo endpoint default, attribution per provider.
-                                        map.setStyle("https://demotiles.maplibre.org/style.json") {
+                                        // Dark base map matching the app theme (free CARTO tiles,
+                                        // no key; attribution: © OpenStreetMap contributors © CARTO).
+                                        // Configurable via Settings → map style URL.
+                                        map.setStyle("https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json") {
                                             try {
                                                 // Store the controller only once the style is live so
                                                 // later renders (new captures) affect a ready map.
@@ -115,6 +155,11 @@ fun MapScreen(vm: CameraViewModel) {
                 }
             }
         }
+        } else {
+            Box(Modifier.weight(1f).fillMaxWidth()) {
+                JourneysContent(vm, onPlay)
+            }
+        }
     }
 }
 
@@ -141,11 +186,25 @@ private class MapOverlayController(private val map: org.maplibre.android.maps.Ma
                 polylines += map.addPolyline(
                     org.maplibre.android.annotations.PolylineOptions()
                         .addAll(pts).width(4f))
-                val bounds = org.maplibre.android.geometry.LatLngBounds.Builder()
-                    .includes(pts).build()
-                map.easeCamera(
-                    org.maplibre.android.camera.CameraUpdateFactory
-                        .newLatLngBounds(bounds, 80), 800)
+                val lats = pts.map { it.latitude }
+                val lngs = pts.map { it.longitude }
+                val span = maxOf(lats.max() - lats.min(), lngs.max() - lngs.min())
+                if (span < 0.06) {
+                    // Points are close: fixed district zoom (구·동 레벨) instead
+                    // of fitting bounds (which zooms in too far).
+                    val center = org.maplibre.android.geometry.LatLng(
+                        (lats.max() + lats.min()) / 2,
+                        (lngs.max() + lngs.min()) / 2)
+                    map.easeCamera(
+                        org.maplibre.android.camera.CameraUpdateFactory
+                            .newLatLngZoom(center, 13.5), 800)
+                } else {
+                    val bounds = org.maplibre.android.geometry.LatLngBounds.Builder()
+                        .includes(pts).build()
+                    map.easeCamera(
+                        org.maplibre.android.camera.CameraUpdateFactory
+                            .newLatLngBounds(bounds, 80), 800)
+                }
             } else if (captures.size == 1) {
                 val g = captures.first().gps!!
                 map.easeCamera(

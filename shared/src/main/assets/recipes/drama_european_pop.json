@@ -1,0 +1,64 @@
+{
+  "id": "drama_european_pop",
+  "version": 1,
+  "name": "Killing Eve",
+  "description": "Killing Eve에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Killing Eve",
+  "colorDna": [
+    "Red",
+    "Yellow",
+    "Blue"
+  ],
+  "scenes": [
+    "interior",
+    "stage",
+    "day",
+    "exterior",
+    "night"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "drama",
+    "red",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#E04B5A",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_european_pop.cube",
+    "hash": "96ffb811aaa6590dba20e3d23b1820965d121f826e6ba5622208e73c9d017b9a",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.05,
+    "tint": 0.03,
+    "saturation": 0.3
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "European Pop",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/4wKhTVw8aGq5AZMa0Q1spERdi7n.jpg"
+}

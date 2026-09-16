@@ -1,0 +1,63 @@
+{
+  "id": "drama_cold_lake",
+  "version": 1,
+  "name": "Ozark",
+  "description": "Ozark에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Ozark",
+  "colorDna": [
+    "Cyan",
+    "Green",
+    "Gray"
+  ],
+  "scenes": [
+    "interior",
+    "night",
+    "city",
+    "day"
+  ],
+  "tags": [
+    "cinematic",
+    "cyan",
+    "drama",
+    "gray",
+    "green"
+  ],
+  "priceTier": "free",
+  "previewTint": "#3E8E8A",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_cold_lake.cube",
+    "hash": "44737e622d1a02ed8064e50f22b28788ae51cba100012c71aec0087b023725bd",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.1,
+    "contrast": 0.14,
+    "highlights": 0,
+    "shadows": -0.02,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": -0.28,
+    "tint": -0.04,
+    "saturation": -0.2
+  },
+  "effects": {
+    "grain": 0.08,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Cold Lake",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/pCGyPVrI9Fzw6rE1Pvi4BIXF6ET.jpg"
+}

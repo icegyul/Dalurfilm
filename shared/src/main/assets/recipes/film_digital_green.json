@@ -1,0 +1,61 @@
+{
+  "id": "film_digital_green",
+  "version": 1,
+  "name": "The Matrix",
+  "description": "The Matrix에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "The Matrix",
+  "colorDna": [
+    "Green",
+    "Black"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "interior",
+    "lowlight"
+  ],
+  "tags": [
+    "black",
+    "cinematic",
+    "film",
+    "green"
+  ],
+  "priceTier": "free",
+  "previewTint": "#2FD97B",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_digital_green.cube",
+    "hash": "c628e0265e287eb9707d6e2cace45e82262a889c69107d37906973fa931a0ee0",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.1,
+    "contrast": 0.15,
+    "highlights": 0,
+    "shadows": -0.05,
+    "fade": 0
+  },
+  "color": {
+    "temperature": -0.15,
+    "tint": -0.1,
+    "saturation": 0.05
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Digital Green",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/aOIuZAjPaRIE6CMzbazvcHuHXDc.jpg"
+}

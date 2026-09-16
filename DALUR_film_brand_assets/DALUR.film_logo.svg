@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 320" role="img" aria-labelledby="title desc">
+  <title id="title">DALUR.film logo</title>
+  <desc id="desc">Minimal wordmark with DALUR in bold uppercase and film in lowercase.</desc>
+  <rect width="1600" height="320" fill="#0B1026"/>
+  <text x="58" y="244"
+        fill="#F2EFE9"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="218"
+        font-weight="900"
+        letter-spacing="0">DALUR</text>
+  <circle cx="955" cy="216" r="31" fill="#F2EFE9"/>
+  <text x="1008" y="244"
+        fill="#F2EFE9"
+        font-family="Arial, Helvetica, sans-serif"
+        font-size="208"
+        font-weight="700"
+        letter-spacing="-5">film</text>
+</svg>

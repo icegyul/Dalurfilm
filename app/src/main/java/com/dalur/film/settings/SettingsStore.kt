@@ -16,14 +16,27 @@ class SettingsStore(private val context: Context) {
         val MAP_STYLE = stringPreferencesKey("map_style")
         val HAPTICS = booleanPreferencesKey("haptics")
         val REDUCED_MOTION = booleanPreferencesKey("reduced_motion")
+        val OWNED_RECIPES = stringSetPreferencesKey("owned_recipes")
+        val ZOOM_ENABLED = booleanPreferencesKey("zoom_enabled")
+        val GUIDE_DEFAULT_ON = booleanPreferencesKey("guide_default_on")
+        val GRID_DEFAULT_MODE = intPreferencesKey("grid_default_mode")
     }
 
     val filmIntensity: Flow<Float> = context.ds.data.map { it[K.FILM_INTENSITY] ?: 0.85f }
     val playbackLutFirst: Flow<Boolean> = context.ds.data.map { it[K.PLAYBACK_LUT] ?: true }
     val mapStyle: Flow<String> = context.ds.data.map {
-        it[K.MAP_STYLE] ?: "https://demotiles.maplibre.org/style.json"
+        it[K.MAP_STYLE] ?: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json"
     }
     val reducedMotion: Flow<Boolean> = context.ds.data.map { it[K.REDUCED_MOTION] ?: false }
+    /** Locally owned (test-purchased) recipe ids. Real entitlements move server-side. */
+    val ownedRecipes: Flow<Set<String>> = context.ds.data.map { it[K.OWNED_RECIPES] ?: emptySet() }
+    /** Zoom control on/off. Off by default; enabled in Settings → Capture. */
+    val zoomEnabled: Flow<Boolean> = context.ds.data.map { it[K.ZOOM_ENABLED] ?: false }
+    /** Whether the person guide overlay starts on when Camera opens. Off by default —
+     *  first launch shows the plain viewfinder, not the guide. */
+    val guideDefaultOn: Flow<Boolean> = context.ds.data.map { it[K.GUIDE_DEFAULT_ON] ?: false }
+    /** Default grid mode: 0 off · 1 thirds · 2 16:9 · 3 9:16 · 4 shorts-UI · 5 4:3. */
+    val gridDefaultMode: Flow<Int> = context.ds.data.map { it[K.GRID_DEFAULT_MODE] ?: 1 }
 
     suspend fun setFilmIntensity(v: Float) {
         context.ds.edit { it[K.FILM_INTENSITY] = v.coerceIn(0f, 1f) }
@@ -33,5 +46,18 @@ class SettingsStore(private val context: Context) {
     }
     suspend fun setReducedMotion(v: Boolean) {
         context.ds.edit { it[K.REDUCED_MOTION] = v }
+    }
+    suspend fun setZoomEnabled(v: Boolean) {
+        context.ds.edit { it[K.ZOOM_ENABLED] = v }
+    }
+    suspend fun setGuideDefaultOn(v: Boolean) {
+        context.ds.edit { it[K.GUIDE_DEFAULT_ON] = v }
+    }
+    suspend fun setGridDefaultMode(v: Int) {
+        context.ds.edit { it[K.GRID_DEFAULT_MODE] = v.coerceIn(0, 5) }
+    }
+
+    suspend fun addOwnedRecipe(id: String) {
+        context.ds.edit { it[K.OWNED_RECIPES] = (it[K.OWNED_RECIPES] ?: emptySet()) + id }
     }
 }

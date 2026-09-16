@@ -1,0 +1,64 @@
+{
+  "id": "film_color_separation",
+  "version": 1,
+  "name": "Traffic",
+  "description": "Traffic에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Traffic",
+  "colorDna": [
+    "Yellow",
+    "Blue",
+    "Green"
+  ],
+  "scenes": [
+    "cinema",
+    "day",
+    "exterior",
+    "night",
+    "interior"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "film",
+    "green",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#D8B93A",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_color_separation.cube",
+    "hash": "58d959109a13fd7bd1f75d633fab93ca06a55f34c65a667ceaa47875e1d3584e",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0
+  },
+  "color": {
+    "temperature": 0,
+    "tint": -0.05,
+    "saturation": 0.3
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Color Separation",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/sDG3JwwxwOW3ekpRTzmdkJzk9js.jpg"
+}

@@ -1,0 +1,61 @@
+{
+  "id": "mv_silver_noir",
+  "version": 1,
+  "name": "Umbrella",
+  "description": "Umbrella에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Rihanna - Umbrella",
+  "colorDna": [
+    "Silver",
+    "Black"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "lowlight"
+  ],
+  "tags": [
+    "black",
+    "cinematic",
+    "music video",
+    "silver"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#B8B8C0",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_silver_noir.cube",
+    "hash": "8169001fa49ad271705eddcf2e0ebf6ab38955bf1213874d07397e4941df9969",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.1,
+    "contrast": 0.18,
+    "highlights": 0,
+    "shadows": -0.03,
+    "fade": 0
+  },
+  "color": {
+    "temperature": -0.05,
+    "tint": 0,
+    "saturation": -0.6
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Silver Noir",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/piXUA7L0gWQNtnDPXtBe24C9FF6.jpg"
+}

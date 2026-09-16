@@ -1,0 +1,63 @@
+{
+  "id": "mv_mono_rock",
+  "version": 1,
+  "name": "Do I Wanna Know?",
+  "description": "Do I Wanna Know?에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Arctic Monkeys - Do I Wanna Know?",
+  "colorDna": [
+    "Black",
+    "White"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "lowlight",
+    "studio",
+    "day"
+  ],
+  "tags": [
+    "black",
+    "cinematic",
+    "music video",
+    "white"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#909090",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_mono_rock.cube",
+    "hash": "10b0cd63bd953e27bda3d328b8de6b3ece29b6b515535a8b48debcdb8faa4cd8",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.02,
+    "contrast": 0.2,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0
+  },
+  "color": {
+    "temperature": 0,
+    "tint": 0,
+    "saturation": -0.9
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Mono Rock",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/A4wmSMZNYgt3aqWMId36wWN6gtB.jpg"
+}

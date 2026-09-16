@@ -12,6 +12,26 @@ data class FilmRecipe(
     val creatorType: String = "dalur", // dalur | local
     /** Browse grouping tab: Signature | Vivid | People | Natural | Classic | Low Light | Special | General. */
     val category: String = "General",
+    /** Reference work that inspired the look. UI shows "Inspired by X" — never
+     *  an official-LUT claim (spec §8). */
+    val inspiredBy: String? = null,
+    /** Dominant color DNA chips, e.g. ["Cyan", "Blue", "Black"]. */
+    val colorDna: List<String> = emptyList(),
+    /** Recommended scenes, e.g. ["night", "city"]. */
+    val scenes: List<String> = emptyList(),
+    /** Search/mood tags. */
+    val tags: List<String> = emptyList(),
+    /** free | premium. Actual prices live in ops policy, never hard-coded. */
+    val priceTier: String = "free",
+    /** KRW price from seed/ops data (null = not for sale / free). */
+    val priceKrw: Int? = null,
+    /** Card/preview wash "#RRGGBB". Approximation only; render uses tone/color. */
+    val previewTint: String? = null,
+    /** DALUR-original style name (e.g. "Cold Neon"). Subtitle/tag use only —
+     *  the main title is the work title (naming directive). */
+    val styleName: String? = null,
+    /** TMDB poster URL (w342). Display only, with TMDB attribution. Null = generated art. */
+    val posterUrl: String? = null,
     val lut: LutRef? = null,
     val intensity: Float = 0.85f,
     val tone: Tone = Tone(),

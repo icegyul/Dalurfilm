@@ -1,0 +1,60 @@
+{
+  "id": "film_dusty_sepia",
+  "version": 1,
+  "name": "O Brother, Where Art Thou?",
+  "description": "O Brother, Where Art Thou?에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "O Brother, Where Art Thou?",
+  "colorDna": [
+    "Yellow",
+    "Brown"
+  ],
+  "scenes": [
+    "cinema",
+    "day",
+    "exterior"
+  ],
+  "tags": [
+    "brown",
+    "cinematic",
+    "film",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#C99A4B",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_dusty_sepia.cube",
+    "hash": "82e162928975ae5469d4a8e5ba1c49b1114878cdb8f86c633a0bf6c424b8860c",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.05,
+    "contrast": 0.06,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.04
+  },
+  "color": {
+    "temperature": 0.3,
+    "tint": 0,
+    "saturation": -0.25
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Dusty Sepia",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/2YztYilviFCYcEtDAnrOstUWGie.jpg"
+}

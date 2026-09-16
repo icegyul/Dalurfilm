@@ -1,0 +1,65 @@
+{
+  "id": "mv_hard_contrast",
+  "version": 1,
+  "name": "HUMBLE.",
+  "description": "HUMBLE.에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Kendrick Lamar - HUMBLE.",
+  "colorDna": [
+    "Green",
+    "Red",
+    "White"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "interior",
+    "studio",
+    "day"
+  ],
+  "tags": [
+    "cinematic",
+    "green",
+    "music video",
+    "red",
+    "white"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#D8D8D8",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_hard_contrast.cube",
+    "hash": "f0332e63c2c3ba63e65ae799592d155587a762578687b0473f1355bc304b1106",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.22,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0
+  },
+  "color": {
+    "temperature": 0,
+    "tint": 0,
+    "saturation": 0.15
+  },
+  "effects": {
+    "grain": 0.08,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Hard Contrast",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/wc8e0NRsknvVerfMAwiDlxWIdnS.jpg"
+}

@@ -1,0 +1,64 @@
+{
+  "id": "film_cold_neon",
+  "version": 1,
+  "name": "Blade Runner 2049",
+  "description": "Blade Runner 2049에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Blade Runner 2049",
+  "colorDna": [
+    "Cyan",
+    "Blue",
+    "Black"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "city",
+    "interior",
+    "lowlight"
+  ],
+  "tags": [
+    "black",
+    "blue",
+    "cinematic",
+    "cyan",
+    "film"
+  ],
+  "priceTier": "free",
+  "previewTint": "#35C4DC",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_cold_neon.cube",
+    "hash": "0c7aaaf76670f8f436afd7cd97dca35d8bee73d9284a64f4454b730af96385ae",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.14,
+    "highlights": -0.2,
+    "shadows": 0.06,
+    "fade": 0.03
+  },
+  "color": {
+    "temperature": -0.24,
+    "tint": 0.08,
+    "saturation": -0.16
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Cold Neon",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/gajva2L0rPYkEWjzgFlBXCAVBE5.jpg"
+}

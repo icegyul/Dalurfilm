@@ -1,0 +1,66 @@
+{
+  "id": "mv_warehouse_reality",
+  "version": 1,
+  "name": "This Is America",
+  "description": "This Is America에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Childish Gambino - This Is America",
+  "colorDna": [
+    "Green",
+    "Brown",
+    "Skin"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "interior",
+    "exterior",
+    "day",
+    "person"
+  ],
+  "tags": [
+    "brown",
+    "cinematic",
+    "green",
+    "music video",
+    "skin"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#8A7B5A",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_warehouse_reality.cube",
+    "hash": "a1e1d699916c04495eaf03f15112b0b485ba4259488d3d157a201000ba396d22",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.05,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.05,
+    "tint": -0.04,
+    "saturation": -0.1
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Warehouse Reality",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/jqVkQfeeEmdga1G0jpBwwXXwwSK.jpg"
+}

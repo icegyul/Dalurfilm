@@ -1,0 +1,62 @@
+{
+  "id": "film_toxic_gotham",
+  "version": 1,
+  "name": "Joker",
+  "description": "Joker에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Joker",
+  "colorDna": [
+    "Green",
+    "Yellow"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "interior",
+    "day",
+    "exterior"
+  ],
+  "tags": [
+    "cinematic",
+    "film",
+    "green",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#8AC926",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_toxic_gotham.cube",
+    "hash": "856b14174cd3e809d60b28f9645e11b7d338d3e41aaabd7940fadba0be496c41",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.05,
+    "contrast": 0.18,
+    "highlights": 0,
+    "shadows": -0.03,
+    "fade": 0
+  },
+  "color": {
+    "temperature": -0.05,
+    "tint": -0.12,
+    "saturation": 0.15
+  },
+  "effects": {
+    "grain": 0.08,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Toxic Gotham",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg"
+}

@@ -1,0 +1,63 @@
+{
+  "id": "film_soft_coral",
+  "version": 1,
+  "name": "Her",
+  "description": "Her에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Her",
+  "colorDna": [
+    "Coral",
+    "Peach",
+    "Cream"
+  ],
+  "scenes": [
+    "cinema",
+    "day",
+    "exterior",
+    "interior"
+  ],
+  "tags": [
+    "cinematic",
+    "coral",
+    "cream",
+    "film",
+    "peach"
+  ],
+  "priceTier": "free",
+  "previewTint": "#FF9D85",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_soft_coral.cube",
+    "hash": "efc6b4fc66a881a35241e003feb02ce73b56e7d9bc62b47688ed2d72949b8eab",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.12,
+    "contrast": -0.02,
+    "highlights": 0,
+    "shadows": 0.02,
+    "fade": 0.04
+  },
+  "color": {
+    "temperature": 0.2,
+    "tint": 0.06,
+    "saturation": 0.1
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Soft Coral",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/eCOtqtfvn7mxGl6nfmq4b1exJRc.jpg"
+}

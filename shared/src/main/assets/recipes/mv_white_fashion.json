@@ -1,0 +1,66 @@
+{
+  "id": "mv_white_fashion",
+  "version": 1,
+  "name": "Bad Romance",
+  "description": "Bad Romance에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Lady Gaga - Bad Romance",
+  "colorDna": [
+    "White",
+    "Black",
+    "Blue"
+  ],
+  "scenes": [
+    "stage",
+    "studio",
+    "day",
+    "night",
+    "lowlight",
+    "interior"
+  ],
+  "tags": [
+    "black",
+    "blue",
+    "cinematic",
+    "music video",
+    "white"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#DCE8F2",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_white_fashion.cube",
+    "hash": "45f07a4e6f876856ed4fd0e624380e8a9ecdce1a350ae4070492241968d07b5d",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.15,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.03
+  },
+  "color": {
+    "temperature": -0.08,
+    "tint": 0.02,
+    "saturation": -0.2
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "White Fashion",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/9Y4Pz7AEXhB9qNar2tMsx5EVXML.jpg"
+}

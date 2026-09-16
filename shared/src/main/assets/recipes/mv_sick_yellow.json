@@ -1,0 +1,66 @@
+{
+  "id": "mv_sick_yellow",
+  "version": 1,
+  "name": "bad guy",
+  "description": "bad guy에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Billie Eilish - bad guy",
+  "colorDna": [
+    "Yellow",
+    "Green",
+    "Black"
+  ],
+  "scenes": [
+    "stage",
+    "day",
+    "exterior",
+    "night",
+    "interior",
+    "lowlight"
+  ],
+  "tags": [
+    "black",
+    "cinematic",
+    "green",
+    "music video",
+    "yellow"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#D8D62E",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_sick_yellow.cube",
+    "hash": "db254431949e4c53422489a89b1fd43562baff63c87e126c99c646de5ed6023c",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.05,
+    "contrast": 0.16,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0
+  },
+  "color": {
+    "temperature": 0.1,
+    "tint": -0.14,
+    "saturation": 0.2
+  },
+  "effects": {
+    "grain": 0.08,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Sick Yellow",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/4K69OtW6PVQ8gDozNB9Ja4j5iQS.jpg"
+}

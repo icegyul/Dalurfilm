@@ -1,0 +1,64 @@
+{
+  "id": "mv_midnight_red",
+  "version": 1,
+  "name": "Thriller",
+  "description": "Thriller에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "Michael Jackson - Thriller",
+  "colorDna": [
+    "Blue",
+    "Red",
+    "Black"
+  ],
+  "scenes": [
+    "stage",
+    "night",
+    "interior",
+    "lowlight"
+  ],
+  "tags": [
+    "black",
+    "blue",
+    "cinematic",
+    "music video",
+    "red"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#C22E4B",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_midnight_red.cube",
+    "hash": "21fbd0402b338701aba65a223b37c7380cc8cec4c82e12a343cd45c496ad6190",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.12,
+    "contrast": 0.18,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0
+  },
+  "color": {
+    "temperature": -0.05,
+    "tint": 0.08,
+    "saturation": 0.2
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Midnight Red",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/djv4LM6uanJriwpsOyJzaaSp4gf.jpg"
+}

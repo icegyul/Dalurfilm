@@ -1,0 +1,61 @@
+{
+  "id": "film_blue_intimacy",
+  "version": 1,
+  "name": "Moonlight",
+  "description": "Moonlight에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Moonlight",
+  "colorDna": [
+    "Blue",
+    "Cyan"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "interior",
+    "city"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "cyan",
+    "film"
+  ],
+  "priceTier": "free",
+  "previewTint": "#4A7FD6",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_blue_intimacy.cube",
+    "hash": "50dea61df94b4a92fd088b255b0f3b2388e42fa81ab1ff0050afc2e0c3963463",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.05,
+    "contrast": 0.1,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.03
+  },
+  "color": {
+    "temperature": -0.3,
+    "tint": 0.04,
+    "saturation": 0.05
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Blue Intimacy",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/3rWk9g0Oup5WHcrpjvw5zW1WhLc.jpg"
+}

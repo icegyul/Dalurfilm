@@ -62,8 +62,6 @@ fun ProCameraPanel(vm: CameraViewModel) {
                 label = "Hist")
             ProFilterChip(selected = pro.zebraOn, onClick = { vm.toggleZebra() },
                 label = "Zebra")
-            ProFilterChip(selected = pro.guidesOn, onClick = { vm.toggleGuides() },
-                label = "Guides")
         }
         Text(
             if (caps?.logSupported == false)

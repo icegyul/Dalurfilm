@@ -1,0 +1,61 @@
+{
+  "id": "drama_southern_dust",
+  "version": 1,
+  "name": "True Detective",
+  "description": "True Detective에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "True Detective",
+  "colorDna": [
+    "Green",
+    "Brown"
+  ],
+  "scenes": [
+    "interior",
+    "night",
+    "exterior",
+    "day"
+  ],
+  "tags": [
+    "brown",
+    "cinematic",
+    "drama",
+    "green"
+  ],
+  "priceTier": "free",
+  "previewTint": "#8A7B4E",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_southern_dust.cube",
+    "hash": "9827cd9c9eb649e0c5a823b5dc7f8c74f92e11f913fc34b076872548115e19b5",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.05,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.1,
+    "tint": -0.06,
+    "saturation": -0.2
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Southern Dust",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/cuV2O5ZyDLHSOWzg3nLVljp1ubw.jpg"
+}

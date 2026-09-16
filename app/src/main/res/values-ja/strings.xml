@@ -1,0 +1,166 @@
+<resources>
+    <string name="app_name">DALUR film</string>
+    <!-- Permissions -->
+    <string name="perm_camera_rationale">写真とビデオの撮影のためカメラへのアクセスが必要です。</string>
+    <string name="perm_mic_rationale">マイクはビデオの音声専用です。写真には不要です。</string>
+    <string name="perm_location_rationale">位置情報は任意です。許可すると撮影が地図とジャーニーに表示されます。</string>
+    <string name="perm_gallery_rationale">ギャラリーへのアクセスは撮影の保存と表示に使います。</string>
+    <!-- Easy camera -->
+    <string name="mode_photo">写真</string>
+    <string name="mode_video">ビデオ</string>
+    <string name="easy_shutter_cd">シャッター</string>
+    <string name="easy_switch_camera_cd">カメラ切替</string>
+    <string name="easy_gallery_cd">最新の撮影</string>
+    <!-- Pro -->
+    <string name="pro_title">PRO</string>
+    <string name="monitor_log">LOG</string>
+    <string name="monitor_lut">LUT</string>
+    <string name="not_supported_on_device">このデバイスでは非対応</string>
+    <!-- Films -->
+    <string name="films_title">フィルム</string>
+    <string name="film_save">フィルム保存</string>
+    <string name="film_reset">リセット</string>
+    <!-- Map / Journey -->
+    <string name="map_title">マップ</string>
+    <string name="journeys_title">ジャーニー</string>
+    <string name="journey_export">エクスポート</string>
+    <!-- Settings -->
+    <string name="settings_title">設定</string>
+    <!-- Capability -->
+    <string name="capability_title">対応機能レポート</string>
+    <string name="log_unsupported_reason">このデバイスはLog/フラット撮影プロファイルを公開していません。Log録画は無効ですが、LUTモニタリング等その他の機能は使えます。</string>
+    <!-- Tabs -->
+    <string name="tab_camera">カメラ</string>
+    <string name="tab_films">フィルム</string>
+    <string name="tab_guide">ガイド</string>
+    <string name="tab_map">マップ</string>
+    <string name="map_tab_map">地図</string>
+    <!-- Grid -->
+    <string name="grid_off">グリッドOFF</string>
+    <string name="grid_thirds">三分割グリッド</string>
+    <string name="grid_16x9">16:9フレーム</string>
+    <string name="grid_9x16">9:16縦セーフ</string>
+    <string name="grid_shorts">ショーツUIガイド</string>
+    <string name="grid_4x3">4:3フレームガイド</string>
+    <!-- Settings: Guide & Grid -->
+    <string name="settings_guide_grid_section">ガイド・グリッド</string>
+    <string name="settings_guide_default">人物ガイドの初期値</string>
+    <string name="settings_guide_default_desc">カメラ画面を開くと人物ガイドが自動でオンになります。</string>
+    <string name="settings_grid_default">デフォルトグリッド</string>
+    <!-- Meter -->
+    <string name="meter_too_loud">音が大きすぎます。マイクを離してください</string>
+    <string name="meter_too_quiet">音が小さすぎます。マイクを近づけてください</string>
+    <!-- Guide coaching -->
+    <string name="coach_unsupported">顔認識非対応 — シルエットに合わせてください</string>
+    <string name="coach_show_face">顔を画面に映してください</string>
+    <string name="coach_step_back">もっと下がってください</string>
+    <string name="coach_come_closer">もっと近づいてください</string>
+    <string name="coach_perfect">いい感じ！このまま撮ってください</string>
+    <!-- GUIDE Phase 1: Headroom + Subject Position hints -->
+    <string name="hint_headroom_too_tight">ヘッドルーム不足 — 少し下げてください</string>
+    <string name="hint_headroom_too_much">余白が多いです — 少し上げてください</string>
+    <string name="hint_position_left">左1/3</string>
+    <string name="hint_position_center">中央</string>
+    <string name="hint_position_right">右1/3</string>
+    <!-- Common -->
+    <string name="expand">もっと見る</string>
+    <string name="collapse">閉じる</string>
+    <string name="recommend">おすすめ</string>
+    <string name="step_forward">▲ 前へ</string>
+    <string name="step_back">▼ 後ろへ</string>
+    <string name="guide_step_forward">前へ</string>
+    <string name="guide_step_back">後ろへ</string>
+    <string name="close">閉じる</string>
+    <string name="confirm_ok">確認</string>
+    <string name="confirm_cancel">キャンセル</string>
+    <!-- Film selector / HUD -->
+    <string name="film_select">フィルム選択</string>
+    <string name="free_gb">残り%1$dGB</string>
+    <!-- Shorts safety -->
+    <string name="shorts_top">上部UI注意</string>
+    <string name="shorts_right">右ボタン注意</string>
+    <string name="shorts_bottom">字幕注意</string>
+    <!-- Silhouette -->
+    <string name="headroom">頭はここまで</string>
+    <!-- Guide tab -->
+    <string name="shot_close_up">クローズアップ</string>
+    <string name="shot_close_up_tip">目を画面上1/3ラインに合わせてください</string>
+    <string name="shot_bust">バスト</string>
+    <string name="shot_bust_tip">胸の下に余裕を持たせてください</string>
+    <string name="shot_knee">ニー</string>
+    <string name="shot_knee_tip">膝が切れないよう下に余白を</string>
+    <string name="shot_full">フル</string>
+    <string name="shot_full_tip">つま先まで、上下均等に</string>
+    <string name="shot_extreme_full">エクストリームフル</string>
+    <string name="shot_extreme_full_tip">全身と周囲の空間をゆったり収めてください</string>
+    <string name="coach_title">人物ガイド</string>
+    <string name="coach_unsupported_short">未対応</string>
+    <string name="coach_detected">認識: %1$s</string>
+    <string name="coach_no_face">顔なし</string>
+    <string name="guide_180">180°設定</string>
+    <string name="guide_goal">目標: %1$s · %2$s</string>
+    <string name="guide_view_last">直前の撮影を見る</string>
+    <!-- Films screen -->
+    <string name="films_free">無料</string>
+    <string name="films_owned">所有</string>
+    <string name="films_owned_badge">所有</string>
+    <string name="films_subtitle">作品のムードで撮る。カードをタップして説明を見て適用・購入。</string>
+    <string name="films_search_hint">作品・スタイル・タグ検索</string>
+    <string name="films_preview_mine">最近の写真 × フィルム色味 (プレビュー)</string>
+    <string name="films_preview_sample">サンプルシーン × フィルム色味 (プレビュー)</string>
+    <string name="films_scenes">おすすめ: %1$s</string>
+    <string name="films_intensity">強度</string>
+    <string name="films_apply">適用</string>
+    <string name="films_apply_locked">適用 (購入が必要)</string>
+    <string name="films_save_mine">マイレシピに保存</string>
+    <string name="films_disclaimer">プレビューは近似値で、撮影時に適用されます。作品名は参考表記であり公式LUTではありません。ポスター: TMDB API (TMDBの承認なし)。</string>
+    <string name="films_buy_item">商品</string>
+    <string name="films_buy_license">ライセンス</string>
+    <string name="films_buy_license_value">PERSONAL · この端末</string>
+    <string name="films_buy_price">価格</string>
+    <string name="films_buy">%1$s 購入</string>
+    <string name="films_buy_title">購入する</string>
+    <string name="films_testpay_note">テスト決済です。実際の請求はなく、PG連携後に本決済へ切り替わります。</string>
+    <string name="films_confirm_title">テスト決済</string>
+    <string name="films_confirm_ask">実際の請求はありません。購入しますか？</string>
+    <!-- Errors -->
+    <string name="err_camera_unavailable">カメラ使用不可: %1$s</string>
+    <string name="err_camera_starting">カメラ準備中です。もう一度お試しください。</string>
+    <string name="err_film_not_applied">フィルム未適用: %1$s — フィルムなしで保存しました。</string>
+    <string name="err_save_failed">保存失敗: %1$s</string>
+    <string name="err_capture_failed">撮影失敗: %1$s</string>
+    <string name="err_video_starting">ビデオ準備中です。もう一度お試しください。</string>
+    <string name="err_mic_needed">ビデオ音声にマイク権限が必要です。</string>
+    <string name="err_recording_failed">録画失敗: %1$s</string>
+    <string name="guide_180_short">180° %1$d/%2$d</string>
+    <string name="role_single_a">A単独</string>
+    <string name="role_single_a_tip">Aを左1/3ラインに。視線右の余白(ルックルーム)を空けてください</string>
+    <string name="role_single_b">B単独</string>
+    <string name="role_single_b_tip">Bを右1/3ラインに。視線左の余白(ルックルーム)を空けてください</string>
+    <string name="role_two">ツーショット</string>
+    <string name="role_two_tip">A左・B右。二人を一画面に</string>
+    <string name="shoot180_solo">180° · 単独ツーショット</string>
+    <string name="shoot180_multi">180° · %1$d台中%2$d番(%3$s)</string>
+    <string name="shoot180_title">180°ルール設定</string>
+    <string name="shoot180_rule">A・Bを結ぶ赤い仮想線を越えると二人の左右が入れ替わります。全カメラを線の同じ側に置きます。</string>
+    <string name="shoot180_how_many">カメラ何台？</string>
+    <string name="shoot180_which">この機器は何番目のカメラ？</string>
+    <string name="shoot180_n_cams">%1$d台</string>
+    <string name="shoot180_nth">%1$d番</string>
+    <string name="shoot180_this">%1$d番カメラ · %2$s</string>
+    <string name="shoot180_ok">確認</string>
+    <string name="shoot180_warn">線を越えると左右が替わります！</string>
+    <string name="cat_all">すべて</string>
+    <string name="cat_film">映画</string>
+    <string name="cat_mv">ミュージックビデオ</string>
+    <string name="cat_drama">ドラマ</string>
+    <string name="cat_vivid">ビビッド</string>
+    <string name="cat_signature">シグネチャー</string>
+    <string name="cat_natural">ナチュラル</string>
+    <string name="cat_classic">クラシック</string>
+    <string name="cat_cinema">シネマ</string>
+    <string name="cat_lowlight">ローライト</string>
+    <string name="cat_special">スペシャル</string>
+    <string name="cat_people">人物</string>
+    <string name="cat_general">一般</string>
+</resources>

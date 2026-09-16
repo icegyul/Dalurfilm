@@ -1,0 +1,65 @@
+{
+  "id": "film_hollywood_blue",
+  "version": 1,
+  "name": "La La Land",
+  "description": "La La Land에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "La La Land",
+  "colorDna": [
+    "Blue",
+    "Yellow",
+    "Red"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "interior",
+    "day",
+    "exterior",
+    "stage"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "film",
+    "red",
+    "yellow"
+  ],
+  "priceTier": "free",
+  "previewTint": "#3E6FE0",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_hollywood_blue.cube",
+    "hash": "6632c7da01f535947b94ab360fad09ea4246325a6b180436ca20c3c5fc10757c",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.14,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": -0.1,
+    "tint": 0.02,
+    "saturation": 0.25
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Hollywood Blue",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg"
+}

@@ -1,32 +1,166 @@
 <resources>
     <string name="app_name">DALUR film</string>
     <!-- Permissions -->
-    <string name="perm_camera_rationale">DALUR film needs camera access to take photos and videos.</string>
-    <string name="perm_mic_rationale">Microphone is used only for video sound. Photos never need it.</string>
-    <string name="perm_location_rationale">Location is optional. When allowed, captures are placed on your map and journeys.</string>
-    <string name="perm_gallery_rationale">Gallery access is used to save and show your captures.</string>
+    <string name="perm_camera_rationale">카메라 접근이 필요합니다. 사진과 비디오를 촬영합니다.</string>
+    <string name="perm_mic_rationale">마이크는 비디오 사운드용으로만 사용합니다. 사진에는 필요 없습니다.</string>
+    <string name="perm_location_rationale">위치는 선택 사항입니다. 허용하면 촬영이 지도와 여정에 표시됩니다.</string>
+    <string name="perm_gallery_rationale">갤러리 접근은 촬영 저장과 표시에 사용합니다.</string>
     <!-- Easy camera -->
-    <string name="mode_photo">Photo</string>
-    <string name="mode_video">Video</string>
-    <string name="easy_shutter_cd">Shutter</string>
-    <string name="easy_switch_camera_cd">Switch camera</string>
-    <string name="easy_gallery_cd">Last capture</string>
+    <string name="mode_photo">사진</string>
+    <string name="mode_video">비디오</string>
+    <string name="easy_shutter_cd">셔터</string>
+    <string name="easy_switch_camera_cd">카메라 전환</string>
+    <string name="easy_gallery_cd">최근 촬영</string>
     <!-- Pro -->
     <string name="pro_title">PRO</string>
     <string name="monitor_log">LOG</string>
     <string name="monitor_lut">LUT</string>
-    <string name="not_supported_on_device">Not supported on this device</string>
+    <string name="not_supported_on_device">이 기기에서 지원하지 않음</string>
     <!-- Films -->
-    <string name="films_title">Films</string>
-    <string name="film_save">Save film</string>
-    <string name="film_reset">Reset</string>
+    <string name="films_title">필름</string>
+    <string name="film_save">필름 저장</string>
+    <string name="film_reset">초기화</string>
     <!-- Map / Journey -->
-    <string name="map_title">Map</string>
-    <string name="journeys_title">Journeys</string>
-    <string name="journey_export">Export</string>
+    <string name="map_title">맵</string>
+    <string name="journeys_title">여정</string>
+    <string name="journey_export">내보내기</string>
     <!-- Settings -->
-    <string name="settings_title">Settings</string>
+    <string name="settings_title">설정</string>
     <!-- Capability -->
-    <string name="capability_title">Capability report</string>
-    <string name="log_unsupported_reason">No genuine Log/flat capture profile is exposed by this device. Log recording is disabled; LUT monitoring and all other supported features remain available.</string>
+    <string name="capability_title">지원 기능 리포트</string>
+    <string name="log_unsupported_reason">이 기기에서 진짜 Log/플랫 촬영 프로파일이 노출되지 않습니다. Log 녹화는 비활성화되며, LUT 모니터링과 나머지 지원 기능은 그대로 쓸 수 있습니다.</string>
+    <!-- Tabs -->
+    <string name="tab_camera">카메라</string>
+    <string name="tab_films">필름</string>
+    <string name="tab_guide">가이드</string>
+    <string name="tab_map">맵</string>
+    <string name="map_tab_map">지도</string>
+    <!-- Grid -->
+    <string name="grid_off">그리드 꺼짐</string>
+    <string name="grid_thirds">삼분할 그리드</string>
+    <string name="grid_16x9">16:9 가로 프레임</string>
+    <string name="grid_9x16">9:16 세로 세이프</string>
+    <string name="grid_shorts">숏폼 UI 안전가이드</string>
+    <string name="grid_4x3">4:3 촬영 가이드</string>
+    <!-- Settings: Guide & Grid -->
+    <string name="settings_guide_grid_section">가이드 · 그리드</string>
+    <string name="settings_guide_default">인물 가이드 기본값</string>
+    <string name="settings_guide_default_desc">카메라 화면을 열 때 인물 가이드가 자동으로 켜집니다.</string>
+    <string name="settings_grid_default">기본 그리드</string>
+    <!-- Meter -->
+    <string name="meter_too_loud">소리가 너무 큽니다. 마이크를 멀리 하세요</string>
+    <string name="meter_too_quiet">목소리가 작습니다. 마이크를 가까이 하세요</string>
+    <!-- Guide coaching -->
+    <string name="coach_unsupported">인식 미지원 — 실루엣에 직접 맞추세요</string>
+    <string name="coach_show_face">얼굴을 화면에 비춰주세요</string>
+    <string name="coach_step_back">더 뒤로 가세요~</string>
+    <string name="coach_come_closer">더 가까이 오세요~</string>
+    <string name="coach_perfect">좋아요! 이대로 찍으세요</string>
+    <!-- GUIDE Phase 1: Headroom + Subject Position hints -->
+    <string name="hint_headroom_too_tight">헤드룸 부족 — 살짝 내려주세요</string>
+    <string name="hint_headroom_too_much">여백이 많아요 — 살짝 올려주세요</string>
+    <string name="hint_position_left">왼쪽 1/3</string>
+    <string name="hint_position_center">가운데</string>
+    <string name="hint_position_right">오른쪽 1/3</string>
+    <!-- Common -->
+    <string name="expand">펼치기</string>
+    <string name="collapse">접기</string>
+    <string name="recommend">추천</string>
+    <string name="step_forward">▲ 앞으로</string>
+    <string name="step_back">▼ 뒤로</string>
+    <string name="guide_step_forward">앞으로</string>
+    <string name="guide_step_back">뒤로</string>
+    <string name="close">닫기</string>
+    <string name="confirm_ok">확인</string>
+    <string name="confirm_cancel">취소</string>
+    <!-- Film selector / HUD -->
+    <string name="film_select">필름 선택</string>
+    <string name="free_gb">여유 %1$dGB</string>
+    <!-- Shorts safety -->
+    <string name="shorts_top">상단 UI 주의</string>
+    <string name="shorts_right">우측 버튼 주의</string>
+    <string name="shorts_bottom">하단 자막 주의</string>
+    <!-- Silhouette -->
+    <string name="headroom">여기까지 머리</string>
+    <!-- Guide tab -->
+    <string name="shot_close_up">클로즈업</string>
+    <string name="shot_close_up_tip">눈을 화면 위쪽 1/3선에 맞추세요</string>
+    <string name="shot_bust">바스트</string>
+    <string name="shot_bust_tip">가슴 아래로 여유 있게 담으세요</string>
+    <string name="shot_knee">니샷</string>
+    <string name="shot_knee_tip">무릎이 잘리지 않게 아래 여백을 두세요</string>
+    <string name="shot_full">풀샷</string>
+    <string name="shot_full_tip">발끝까지, 위·아래 여백을 균등하게</string>
+    <string name="shot_extreme_full">익스트림풀샷</string>
+    <string name="shot_extreme_full_tip">전신과 주변 공간을 넉넉하게 담으세요</string>
+    <string name="coach_title">인물 가이드</string>
+    <string name="coach_unsupported_short">인식 미지원</string>
+    <string name="coach_detected">인식: %1$s</string>
+    <string name="coach_no_face">얼굴 없음</string>
+    <string name="guide_180">180도 세팅</string>
+    <string name="guide_goal">목표: %1$s · %2$s</string>
+    <string name="guide_view_last">방금 촬영 보기</string>
+    <!-- Films screen -->
+    <string name="films_free">무료</string>
+    <string name="films_owned">보유중</string>
+    <string name="films_owned_badge">보유</string>
+    <string name="films_subtitle">작품의 느낌으로 찍는다. 카드를 눌러 설명을 보고 적용·구매.</string>
+    <string name="films_search_hint">작품·스타일·태그 검색</string>
+    <string name="films_preview_mine">내 최근 사진 × 필름 색감 (근사 미리보기)</string>
+    <string name="films_preview_sample">예시 장면 × 필름 색감 (근사 미리보기)</string>
+    <string name="films_scenes">추천: %1$s</string>
+    <string name="films_intensity">강도</string>
+    <string name="films_apply">적용하기</string>
+    <string name="films_apply_locked">적용하기 (구매 필요)</string>
+    <string name="films_save_mine">내 레시피로 저장</string>
+    <string name="films_disclaimer">미리보기는 근사치이며 실제 촬영 시 적용됩니다. 작품명은 참조 표기이며 공식 LUT가 아닙니다. 포스터: TMDB API (TMDB endorsement 없음).</string>
+    <string name="films_buy_item">상품</string>
+    <string name="films_buy_license">라이선스</string>
+    <string name="films_buy_license_value">PERSONAL · 이 기기 귀속</string>
+    <string name="films_buy_price">가격</string>
+    <string name="films_buy">%1$s 구매</string>
+    <string name="films_buy_title">구매하기</string>
+    <string name="films_testpay_note">현재 테스트 결제입니다. 실제 청구되지 않으며, PG 연동 시 실제 결제로 전환됩니다.</string>
+    <string name="films_confirm_title">테스트 결제</string>
+    <string name="films_confirm_ask">실제 청구되지 않습니다. 구매 처리할까요?</string>
+    <!-- Errors -->
+    <string name="err_camera_unavailable">카메라 사용 불가: %1$s</string>
+    <string name="err_camera_starting">카메라 준비 중, 다시 시도하세요.</string>
+    <string name="err_film_not_applied">필름 미적용: %1$s — 필름 없이 저장됐습니다.</string>
+    <string name="err_save_failed">저장 실패: %1$s</string>
+    <string name="err_capture_failed">촬영 실패: %1$s</string>
+    <string name="err_video_starting">비디오 준비 중, 다시 시도하세요.</string>
+    <string name="err_mic_needed">비디오 사운드에 마이크 권한이 필요합니다.</string>
+    <string name="err_recording_failed">녹화 실패: %1$s</string>
+    <string name="guide_180_short">180° %1$d/%2$d</string>
+    <string name="role_single_a">A 단독</string>
+    <string name="role_single_a_tip">A를 왼쪽 1/3선에. 시선 오른쪽 여백(룩룸)을 비워두세요</string>
+    <string name="role_single_b">B 단독</string>
+    <string name="role_single_b_tip">B를 오른쪽 1/3선에. 시선 왼쪽 여백(룩룸)을 비워두세요</string>
+    <string name="role_two">투샷</string>
+    <string name="role_two_tip">A 왼쪽·B 오른쪽. 두 사람이 한 화면에 들어오게</string>
+    <string name="shoot180_solo">180° · 단독 투샷</string>
+    <string name="shoot180_multi">180° · %1$d대 중 %2$d번(%3$s)</string>
+    <string name="shoot180_title">180도 법칙 세팅</string>
+    <string name="shoot180_rule">A·B를 잇는 빨간 가상선을 넘으면 두 사람의 좌우가 바뀝니다. 모든 카메라는 선의 같은 쪽에 둡니다.</string>
+    <string name="shoot180_how_many">카메라 몇 대?</string>
+    <string name="shoot180_which">이 기기는 몇 번째 카메라?</string>
+    <string name="shoot180_n_cams">%1$d대</string>
+    <string name="shoot180_nth">%1$d번</string>
+    <string name="shoot180_this">%1$d번 카메라 · %2$s</string>
+    <string name="shoot180_ok">확인</string>
+    <string name="shoot180_warn">선을 넘으면 좌우가 바뀝니다!</string>
+    <string name="cat_all">전체</string>
+    <string name="cat_film">영화</string>
+    <string name="cat_mv">뮤직비디오</string>
+    <string name="cat_drama">드라마</string>
+    <string name="cat_vivid">비비드</string>
+    <string name="cat_signature">시그니처</string>
+    <string name="cat_natural">네추럴</string>
+    <string name="cat_classic">클래식</string>
+    <string name="cat_cinema">시네마</string>
+    <string name="cat_lowlight">로우라이트</string>
+    <string name="cat_special">스페셜</string>
+    <string name="cat_people">인물</string>
+    <string name="cat_general">일반</string>
 </resources>

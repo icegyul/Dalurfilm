@@ -1,0 +1,65 @@
+{
+  "id": "film_amber_shadow",
+  "version": 1,
+  "name": "The Godfather",
+  "description": "The Godfather에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "The Godfather",
+  "colorDna": [
+    "Brown",
+    "Red",
+    "Amber"
+  ],
+  "scenes": [
+    "cinema",
+    "exterior",
+    "day",
+    "interior",
+    "stage",
+    "night"
+  ],
+  "tags": [
+    "amber",
+    "brown",
+    "cinematic",
+    "film",
+    "red"
+  ],
+  "priceTier": "free",
+  "previewTint": "#B45A28",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_amber_shadow.cube",
+    "hash": "79c25886773b2f6b1883d5bf71e5b4c1d695ee1942058f2fd2381beada4144a4",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.12,
+    "contrast": 0.16,
+    "highlights": 0,
+    "shadows": -0.04,
+    "fade": 0
+  },
+  "color": {
+    "temperature": 0.25,
+    "tint": 0.02,
+    "saturation": -0.1
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Amber Shadow",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/3bhkrj58Vtu7enYsRolD1fZdja1.jpg"
+}

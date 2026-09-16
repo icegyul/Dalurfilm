@@ -9,6 +9,16 @@ public struct FilmRecipe: Codable, Sendable {
     public var creatorType: String
     /// Browse grouping tab; absent in older JSON files -> treat as "General".
     public var category: String? = nil
+    /// Spec §8: reference only, never an official-LUT claim.
+    public var inspiredBy: String? = nil
+    public var colorDna: [String]? = nil
+    public var scenes: [String]? = nil
+    public var tags: [String]? = nil
+    public var priceTier: String? = nil
+    public var priceKrw: Int? = nil
+    public var previewTint: String? = nil
+    public var styleName: String? = nil
+    public var posterUrl: String? = nil
     public var lut: LutRef?
     public var intensity: Float
     public var tone: Tone

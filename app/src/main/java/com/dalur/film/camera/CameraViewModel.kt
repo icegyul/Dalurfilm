@@ -29,7 +29,11 @@ data class EasyUiState(
     val isRecording: Boolean = false,
     val recordSeconds: Long = 0,
     val lastCaptureUri: String? = null,
-    val error: String? = null
+    val error: String? = null,
+    /** 인물 가이드 on/off (하단 바에서 토글, 프리뷰가 그린다). */
+    val guideOn: Boolean = false,
+    /** 0 off · 1 thirds · 2 16:9 · 3 9:16 · 4 shorts · 5 4:3 */
+    val gridMode: Int = 0
 )
 
 enum class CaptureMode { PHOTO, VIDEO }
@@ -48,7 +52,6 @@ data class ProUiState(
     val histogramOn: Boolean = true,
     val zebraOn: Boolean = false,
     val peakingOn: Boolean = false,
-    val guidesOn: Boolean = true,
     val audioLevel: Float = 0f,
     val storageFreeText: String = "",
     val recordTarget: RecordTarget = RecordTarget.Internal
@@ -73,6 +76,13 @@ class CameraViewModel(
     val capabilityReport = capabilities.report
     val allCaptures = captures.captures
 
+    // Relay for the global bottom-bar shutter (DalurNav has no camera/recorder
+    // state of its own — EasyCameraScreen owns that — so it just emits a request
+    // here and EasyCameraScreen's real takePhoto()/toggleVideo() picks it up).
+    private val _captureRequests = kotlinx.coroutines.flow.MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+    val captureRequests: kotlinx.coroutines.flow.SharedFlow<Unit> = _captureRequests
+    fun requestCapture() { _captureRequests.tryEmit(Unit) }
+
     init {
         viewModelScope.launch {
             settings.filmIntensity.collect { k ->
@@ -84,6 +94,15 @@ class CameraViewModel(
 
     fun setMode(m: CaptureMode) { _easy.update { it.copy(mode = m, error = null) } }
     fun togglePro() { _easy.update { it.copy(isPro = !it.isPro) } }
+    fun setPro(v: Boolean) { _easy.update { it.copy(isPro = v) } }
+    fun setGuideOn(v: Boolean) { _easy.update { it.copy(guideOn = v) } }
+    fun toggleGuide() { _easy.update { it.copy(guideOn = !it.guideOn) } }
+    fun setGridMode(v: Int) { _easy.update { it.copy(gridMode = v.coerceIn(0, 5)) } }
+    fun cycleGrid(): Int {
+        val next = (_easy.value.gridMode + 1) % 6
+        _easy.update { it.copy(gridMode = next) }
+        return next
+    }
     fun switchLens() {
         _easy.update {
             it.copy(
@@ -116,7 +135,6 @@ class CameraViewModel(
     fun toggleHistogram() { _pro.update { it.copy(histogramOn = !it.histogramOn) } }
     fun toggleZebra() { _pro.update { it.copy(zebraOn = !it.zebraOn) } }
     fun togglePeaking() { _pro.update { it.copy(peakingOn = !it.peakingOn) } }
-    fun toggleGuides() { _pro.update { it.copy(guidesOn = !it.guidesOn) } }
     fun setRecordTarget(t: RecordTarget) { _pro.update { it.copy(recordTarget = t) } }
 
     fun qualitySelector(): QualitySelector = when (_pro.value.resolution) {

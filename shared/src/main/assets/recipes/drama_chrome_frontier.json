@@ -1,0 +1,61 @@
+{
+  "id": "drama_chrome_frontier",
+  "version": 1,
+  "name": "Westworld",
+  "description": "Westworld에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Westworld",
+  "colorDna": [
+    "Gold",
+    "Steel Blue"
+  ],
+  "scenes": [
+    "interior",
+    "stage",
+    "exterior",
+    "day"
+  ],
+  "tags": [
+    "cinematic",
+    "drama",
+    "gold",
+    "steel blue"
+  ],
+  "priceTier": "free",
+  "previewTint": "#D8A94B",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_chrome_frontier.cube",
+    "hash": "6b37cf8fa09ccde82f912657b8d09f51eb18584c6a01312bd3a0edf3f46cf135",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.12,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.15,
+    "tint": 0,
+    "saturation": 0.1
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Chrome Frontier",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/ALlSU9du9iRiKIIoY1sREGNqQ5.jpg"
+}

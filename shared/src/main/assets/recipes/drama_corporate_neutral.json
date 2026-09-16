@@ -1,0 +1,59 @@
+{
+  "id": "drama_corporate_neutral",
+  "version": 1,
+  "name": "Succession",
+  "description": "Succession에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Succession",
+  "colorDna": [
+    "Gray",
+    "Beige"
+  ],
+  "scenes": [
+    "interior",
+    "day"
+  ],
+  "tags": [
+    "beige",
+    "cinematic",
+    "drama",
+    "gray"
+  ],
+  "priceTier": "free",
+  "previewTint": "#A8A094",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_corporate_neutral.cube",
+    "hash": "e15e421987bf63deb3cf02fd1b794d54fcc7202bc2a75cc8f231ffca908580f6",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.02,
+    "contrast": 0.04,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.03
+  },
+  "color": {
+    "temperature": 0.05,
+    "tint": 0,
+    "saturation": -0.4
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Corporate Neutral",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/z0XiwdrCQ9yVIr4O0pxzaAYRxdW.jpg"
+}

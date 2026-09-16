@@ -1,0 +1,61 @@
+{
+  "id": "film_clean_tension",
+  "version": 1,
+  "name": "Parasite",
+  "description": "Parasite에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Parasite",
+  "colorDna": [
+    "Green",
+    "Warm White"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "interior",
+    "day"
+  ],
+  "tags": [
+    "cinematic",
+    "film",
+    "green",
+    "warm white"
+  ],
+  "priceTier": "free",
+  "previewTint": "#9AA88F",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_clean_tension.cube",
+    "hash": "a39b6b7c926a12f2a6d0d8848df5224c1a8b14a5b906cdcc114ed6902b676ca8",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.1,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": 0.02,
+    "tint": -0.08,
+    "saturation": -0.05
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Clean Tension",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/7IiTTgloJzvGI1TAYymCfbfl3vT.jpg"
+}

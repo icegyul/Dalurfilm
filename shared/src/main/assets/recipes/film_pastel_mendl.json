@@ -1,0 +1,64 @@
+{
+  "id": "film_pastel_mendl",
+  "version": 1,
+  "name": "The Grand Budapest Hotel",
+  "description": "The Grand Budapest Hotel에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "The Grand Budapest Hotel",
+  "colorDna": [
+    "Pink",
+    "Cream",
+    "Purple"
+  ],
+  "scenes": [
+    "cinema",
+    "stage",
+    "night",
+    "interior",
+    "day"
+  ],
+  "tags": [
+    "cinematic",
+    "cream",
+    "film",
+    "pink",
+    "purple"
+  ],
+  "priceTier": "free",
+  "previewTint": "#F2A9C4",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_pastel_mendl.cube",
+    "hash": "22f2916aeff5507608cce5e182bd10a7983169492fa3ddacdc93f2a6f5edb10c",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.12,
+    "contrast": -0.04,
+    "highlights": 0,
+    "shadows": 0.02,
+    "fade": 0.05
+  },
+  "color": {
+    "temperature": 0.08,
+    "tint": 0.1,
+    "saturation": 0.05
+  },
+  "effects": {
+    "grain": 0.12,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Pastel Mendl",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/eWdyYQreja6JGCzqHWXpWHDrrPo.jpg"
+}

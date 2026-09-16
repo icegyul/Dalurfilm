@@ -1,0 +1,64 @@
+{
+  "id": "drama_80s_night",
+  "version": 1,
+  "name": "Stranger Things",
+  "description": "Stranger Things에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Stranger Things",
+  "colorDna": [
+    "Blue",
+    "Orange",
+    "Red"
+  ],
+  "scenes": [
+    "interior",
+    "night",
+    "exterior",
+    "day",
+    "stage"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "drama",
+    "orange",
+    "red"
+  ],
+  "priceTier": "free",
+  "previewTint": "#C65A3D",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_80s_night.cube",
+    "hash": "fe6e5c727a0d651a423fd0aed7e6590ed4d0b7a0bf099cfb9401bdbf7983b762",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.05,
+    "contrast": 0.14,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": -0.1,
+    "tint": 0.03,
+    "saturation": 0.2
+  },
+  "effects": {
+    "grain": 0.14,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "80s Night",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/uOOtwVbSr4QDjAGIifLDwpb2Pdl.jpg"
+}

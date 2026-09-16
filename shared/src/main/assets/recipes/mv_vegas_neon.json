@@ -1,0 +1,63 @@
+{
+  "id": "mv_vegas_neon",
+  "version": 1,
+  "name": "Blinding Lights",
+  "description": "Blinding Lights에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Music Video",
+  "inspiredBy": "The Weeknd - Blinding Lights",
+  "colorDna": [
+    "Red",
+    "Blue",
+    "Magenta"
+  ],
+  "scenes": [
+    "stage",
+    "interior",
+    "night"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "magenta",
+    "music video",
+    "red"
+  ],
+  "priceTier": "premium",
+  "previewTint": "#E02E9E",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/mv_vegas_neon.cube",
+    "hash": "ed4bded7d155183481ec3d5fa74517e6e1b4cc29f8e46a21cddfa22b30423c25",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0,
+    "contrast": 0.16,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": -0.05,
+    "tint": 0.12,
+    "saturation": 0.35
+  },
+  "effects": {
+    "grain": 0.06,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Vegas Neon",
+  "priceKrw": 1900,
+  "posterUrl": "https://image.tmdb.org/t/p/w342/7s7Rhd5dalfg9lKX2NMIT5O2sBA.jpg"
+}

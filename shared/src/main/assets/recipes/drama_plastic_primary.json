@@ -1,0 +1,62 @@
+{
+  "id": "drama_plastic_primary",
+  "version": 1,
+  "name": "Squid Game",
+  "description": "Squid Game에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Drama",
+  "inspiredBy": "Squid Game",
+  "colorDna": [
+    "Pink",
+    "Green",
+    "Blue"
+  ],
+  "scenes": [
+    "interior",
+    "stage",
+    "night"
+  ],
+  "tags": [
+    "blue",
+    "cinematic",
+    "drama",
+    "green",
+    "pink"
+  ],
+  "priceTier": "free",
+  "previewTint": "#F25A9E",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/drama_plastic_primary.cube",
+    "hash": "531babe394a323a2a09d0c7cdbe6f3547369fed5e4522f96e8ebdbcee24cd0dc",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": 0.02,
+    "contrast": 0.16,
+    "highlights": 0,
+    "shadows": 0,
+    "fade": 0
+  },
+  "color": {
+    "temperature": 0,
+    "tint": 0.04,
+    "saturation": 0.4
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Plastic Primary",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/1QdXdRYfktUSONkl1oD5gc6Be0s.jpg"
+}

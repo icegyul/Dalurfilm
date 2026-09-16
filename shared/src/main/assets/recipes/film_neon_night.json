@@ -1,0 +1,61 @@
+{
+  "id": "film_neon_night",
+  "version": 1,
+  "name": "Drive",
+  "description": "Drive에서 영감을 받아 DALUR film용으로 재해석한 Color Recipe",
+  "creatorType": "dalur",
+  "category": "Film",
+  "inspiredBy": "Drive",
+  "colorDna": [
+    "Magenta",
+    "Cyan"
+  ],
+  "scenes": [
+    "cinema",
+    "night",
+    "stage",
+    "city"
+  ],
+  "tags": [
+    "cinematic",
+    "cyan",
+    "film",
+    "magenta"
+  ],
+  "priceTier": "free",
+  "previewTint": "#E0409E",
+  "lut": {
+    "format": "cube",
+    "size": 17,
+    "source": "bundled://luts/film_neon_night.cube",
+    "hash": "affd3412391396ffbfd12a7492287a83b6816dfeb7848e72ca0e52f6ab375998",
+    "kind": "creative"
+  },
+  "intensity": 0.9,
+  "tone": {
+    "exposure": -0.1,
+    "contrast": 0.16,
+    "highlights": 0,
+    "shadows": -0.02,
+    "fade": 0.02
+  },
+  "color": {
+    "temperature": -0.12,
+    "tint": 0.12,
+    "saturation": 0.3
+  },
+  "effects": {
+    "grain": 0.1,
+    "grainSize": 0.5,
+    "halation": 0.05,
+    "bloom": 0.05,
+    "vignette": 0.08,
+    "chromaticAberration": 0.01
+  },
+  "frame": {
+    "enabled": false,
+    "showDate": false
+  },
+  "styleName": "Neon Night",
+  "posterUrl": "https://image.tmdb.org/t/p/w342/602vevIURmpDfzbnv5Ubi6wIkQm.jpg"
+}
