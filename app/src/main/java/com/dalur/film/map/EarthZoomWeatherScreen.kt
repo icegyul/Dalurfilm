@@ -38,7 +38,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.dalur.film.R
 import com.dalur.film.camera.CameraViewModel
-import com.dalur.film.weather.MockWeatherRepository
+import com.dalur.film.weather.EarthusWeatherRepository
 import com.dalur.film.weather.WeatherResult
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -46,9 +46,10 @@ import kotlinx.coroutines.launch
 /**
  * "지구에서 줌인해서 내 동네 날씨" 탭.
  *
- * earthus 실제 API(Lambda Function URL + x-api-key)가 아직 없어서 지금은
- * [MockWeatherRepository]로 화면/애니메이션만 완성해둔다 — repository만
- * 실제 구현으로 갈아끼우면 나머지는 그대로 동작한다 (WeatherRepository 참고).
+ * [EarthusWeatherRepository]가 실제 earthus `/v1/weather`를 호출한다 (키는
+ * secrets.properties -> BuildConfig, 커밋되지 않음). 문제 생기면 여기 딱
+ * 한 줄(`EarthusWeatherRepository()` -> `MockWeatherRepository()`)만 바꿔서
+ * 화면/애니메이션을 다시 가짜 데이터로 확인할 수 있다.
  *
  * MapLibre Native Android(11.12.2)는 globe projection을 아직 지원하지 않는다
  * (2026-09 기준 로드맵에만 있음) — 그래서 진짜 3D 지구본 대신: 원형으로 자른
@@ -59,7 +60,7 @@ import kotlinx.coroutines.launch
 fun EarthZoomWeatherTab(vm: CameraViewModel) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
-    val repo = remember { MockWeatherRepository() }
+    val repo = remember { EarthusWeatherRepository() }
 
     var hasLocation by remember {
         mutableStateOf(
@@ -226,7 +227,7 @@ private fun WeatherCard(result: WeatherResult?) {
                             Spacer(Modifier.width(12.dp))
                             Column {
                                 Text(o.stationName, color = Color(0xFFEDF5FA), fontWeight = FontWeight.Bold)
-                                Text("습도 ${o.humidityPct}% · 바람 ${o.windMs}m/s · 강수 ${o.rainMm}mm",
+                                Text("습도 ${o.humidityPct.toInt()}% · 바람 ${o.windMs}m/s · 강수 ${o.rainMm ?: 0.0}mm",
                                     color = Color(0xFFA8BAC6), style = MaterialTheme.typography.bodySmall)
                             }
                         }

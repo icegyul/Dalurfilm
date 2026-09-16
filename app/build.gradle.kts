@@ -1,8 +1,20 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.24"
 }
+
+// secrets.properties is gitignored — never commit real keys (see
+// secrets.properties.example for the template). Missing file -> empty
+// strings, so a fresh checkout still builds (earthus repository just stays
+// unusable until the file is added, same "no fake data" rule as elsewhere).
+val secrets = Properties().apply {
+    val f = rootProject.file("secrets.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+fun secret(key: String): String = secrets.getProperty(key, "")
 
 android {
     namespace = "com.dalur.film"
@@ -22,6 +34,9 @@ android {
             // GPUImage Plus + MapLibre ship these ABIs; keep 64-bit first for Play.
             abiFilters += listOf("arm64-v8a", "armeabi-v7a", "x86_64")
         }
+
+        buildConfigField("String", "EARTHUS_BASE_URL", "\"${secret("EARTHUS_BASE_URL")}\"")
+        buildConfigField("String", "EARTHUS_API_KEY", "\"${secret("EARTHUS_API_KEY")}\"")
     }
 
     buildTypes {

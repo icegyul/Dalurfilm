@@ -1,44 +1,69 @@
 package com.dalur.film.weather
 
+import kotlinx.serialization.Serializable
+
 /**
- * Mirrors earthus's public `/v1/weather` response shape exactly (see
- * EARTHUS v2_APP/prototype/developers.html) so swapping [MockWeatherRepository]
- * for the real HTTP client later is a one-file change — nothing that reads
- * these models needs to know which one is behind [WeatherRepository].
+ * Mirrors earthus's ACTUAL `/v1/weather` response (verified against a live
+ * call, 2026-09-16 — see below), which differs from the developers.html
+ * doc's example in a few places the doc doesn't mention:
+ *   - numeric fields the doc shows as ints (humidityPct, windDirDeg, the
+ *     hourly `t`/`pop`, daily tmin/tmax) come back as JSON floats in
+ *     practice, so they're Double here — an Int field would throw on every
+ *     real response.
+ *   - rainMm can be null (no precipitation), and a `daily` entry for
+ *     "today" can carry only `tmax` with `tmin` absent — both nullable here.
+ *   - hourly objects also carry wd/ws/pcp/rh, not in the doc's example;
+ *     [Json] is configured with ignoreUnknownKeys so those just pass through
+ *     unread rather than crashing the parse.
+ * Swapping [MockWeatherRepository] for [EarthusWeatherRepository] is a
+ * one-line change in the call site — nothing that reads these models needs
+ * to know which one is behind [WeatherRepository].
  */
+@Serializable
 data class WeatherResponse(
     val query: WeatherQuery,
-    val observed: ObservedWeather?,
-    val forecast: ForecastWeather?,
-    val sourceNote: String,
+    val observed: ObservedWeather? = null,
+    val forecast: ForecastWeather? = null,
+    val sourceNote: String = "",
 )
 
+@Serializable
 data class WeatherQuery(val lat: Double, val lon: Double)
 
+@Serializable
 data class ObservedWeather(
     val stationId: String,
     val stationName: String,
     val distanceKm: Double,
-    val observedAt: String, // "yyyyMMddHHmm" KST, per the API doc
+    val observedAt: String, // 실측: "yyyyMMdd HH:mm" KST (문서 예시와 포맷이 다름)
     val tempC: Double,
-    val humidityPct: Int,
+    val humidityPct: Double,
     val windMs: Double,
-    val windDirDeg: Int,
-    val rainMm: Double,
+    val windDirDeg: Double,
+    val rainMm: Double? = null,
 )
 
-data class ForecastHour(val tm: String, val t: Int, val pop: Int, val sky: Int, val pty: Int)
+@Serializable
+data class ForecastHour(
+    val tm: String,
+    val t: Double,
+    val pop: Double = 0.0,
+    val sky: Int = 0,
+    val pty: Int = 0,
+)
 
+@Serializable
 data class ForecastWeather(
     val stationId: String,
     val stationName: String,
     val distanceKm: Double,
     val baseKst: String,
-    val hourly: List<ForecastHour>,
-    val daily: Map<String, DailyRange>,
+    val hourly: List<ForecastHour> = emptyList(),
+    val daily: Map<String, DailyRange> = emptyMap(),
 )
 
-data class DailyRange(val tmin: Int, val tmax: Int)
+@Serializable
+data class DailyRange(val tmin: Double? = null, val tmax: Double? = null)
 
 /** earthus API error shape (400/401/403/429/503) — surfaced as a sealed result
  *  so the UI can show the right message instead of a generic failure. */

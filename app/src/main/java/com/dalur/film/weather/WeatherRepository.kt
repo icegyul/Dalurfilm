@@ -1,6 +1,14 @@
 package com.dalur.film.weather
 
+import com.dalur.film.BuildConfig
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.Locale
 
 /**
  * Thin seam between the UI and earthus's `/v1/weather` endpoint. Only
@@ -37,9 +45,9 @@ class MockWeatherRepository : WeatherRepository {
                     distanceKm = 1.0 + (seed % 5) * 0.4,
                     observedAt = "202609161200",
                     tempC = temp,
-                    humidityPct = humidity,
+                    humidityPct = humidity.toDouble(),
                     windMs = wind,
-                    windDirDeg = (seed * 3) % 360,
+                    windDirDeg = ((seed * 3) % 360).toDouble(),
                     rainMm = if (seed % 7 == 0) 1.5 else 0.0,
                 ),
                 forecast = ForecastWeather(
@@ -48,15 +56,69 @@ class MockWeatherRepository : WeatherRepository {
                     distanceKm = 1.0 + (seed % 5) * 0.4,
                     baseKst = "202609161100",
                     hourly = listOf(
-                        ForecastHour("202609161300", temp.toInt() + 1, 20, 1, 0),
-                        ForecastHour("202609161400", temp.toInt() + 2, 30, 3, 0),
-                        ForecastHour("202609161500", temp.toInt() + 1, 40, 3, 1),
+                        ForecastHour("202609161300", temp + 1, 20.0, 1, 0),
+                        ForecastHour("202609161400", temp + 2, 30.0, 3, 0),
+                        ForecastHour("202609161500", temp + 1, 40.0, 3, 1),
                     ),
-                    daily = mapOf("20260917" to DailyRange(temp.toInt() - 4, temp.toInt() + 5)),
+                    daily = mapOf("20260917" to DailyRange(temp - 4, temp + 5)),
                 ),
                 sourceNote = "가짜 데이터(mock) — earthus API 키 발급 전까지의 미리보기입니다. " +
                     "실제 연동 시 기상청(공공누리 제1유형) 출처로 교체됩니다.",
             )
         )
+    }
+}
+
+/**
+ * Real earthus `/v1/weather` client. Base URL and key come from
+ * [BuildConfig] (populated at build time from the gitignored
+ * secrets.properties — see app/build.gradle.kts) so no key ever lands in
+ * committed source. If secrets.properties is missing, both fields build as
+ * empty strings and every call fails fast with [WeatherResult.NetworkError]
+ * instead of silently hitting a broken URL.
+ */
+class EarthusWeatherRepository(
+    private val baseUrl: String = BuildConfig.EARTHUS_BASE_URL,
+    private val apiKey: String = BuildConfig.EARTHUS_API_KEY,
+) : WeatherRepository {
+    private val json = Json { ignoreUnknownKeys = true }
+
+    override suspend fun fetchWeather(lat: Double, lon: Double): WeatherResult {
+        if (baseUrl.isBlank() || apiKey.isBlank()) {
+            return WeatherResult.NetworkError(
+                "earthus 설정 없음 — secrets.properties에 EARTHUS_BASE_URL/EARTHUS_API_KEY를 채워주세요.")
+        }
+        return withContext(Dispatchers.IO) {
+            var conn: HttpURLConnection? = null
+            try {
+                val url = URL("$baseUrl/v1/weather?lat=${
+                    String.format(Locale.US, "%.6f", lat)
+                }&lon=${String.format(Locale.US, "%.6f", lon)}")
+                conn = (url.openConnection() as HttpURLConnection).apply {
+                    requestMethod = "GET"
+                    setRequestProperty("x-api-key", apiKey)
+                    connectTimeout = 8000
+                    readTimeout = 8000
+                }
+                val code = conn.responseCode
+                val stream = if (code in 200..299) conn.inputStream else conn.errorStream
+                val body = stream?.bufferedReader()?.use { it.readText() } ?: ""
+                when (code) {
+                    200 -> WeatherResult.Success(json.decodeFromString(WeatherResponse.serializer(), body))
+                    400 -> WeatherResult.ApiError(400, "잘못된 좌표")
+                    401 -> WeatherResult.ApiError(401, "API 키 없음")
+                    403 -> WeatherResult.ApiError(403, "유효하지 않은 API 키")
+                    429 -> WeatherResult.ApiError(429, "일일 호출 한도 초과")
+                    503 -> WeatherResult.ApiError(503, "캐시 준비 전 — 잠시 후 다시 시도")
+                    else -> WeatherResult.ApiError(code, "알 수 없는 오류")
+                }
+            } catch (e: IOException) {
+                WeatherResult.NetworkError(e.message ?: "network error")
+            } catch (e: Exception) {
+                WeatherResult.NetworkError(e.message ?: "parse error")
+            } finally {
+                conn?.disconnect()
+            }
+        }
     }
 }
